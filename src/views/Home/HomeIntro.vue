@@ -1,6 +1,12 @@
 <template>
   <div class="homeintro">
-    <h4>這是放在首頁的介紹</h4>
+    
+    <h1>gogogogo</h1>
+    <h1>gogogogo</h1>
+    <h1>gogogogo</h1>
+    <h1>gogogogo</h1>
+    <h1>gogogogo</h1>
+  
   </div>
 </template>
 <script setup></script>
@@ -11,6 +17,8 @@
     height:500px;
     width: 100%;
     background-color: lightgreen;
+    color: gray;
+
 
 }
 </style>

@@ -1,8 +1,8 @@
 <template>
-  <div class="slider">
-    <div class="carousel" @mouseover="pause" @mouseleave="resume">
+  <div class="slidercontain">
+    <div class="sliderdiv" @mouseover="pause" @mouseleave="resume">
       <div
-        class="carousel-item"
+        class="slideritem"
         :style="{ transform: 'translateX(' + (-currentIndex * 100) + '%)' }"
         v-for="(item, index) in images"
         :key="index"
@@ -22,7 +22,7 @@ import { ref, onMounted, onUnmounted } from "vue";
 
 // 圖片數據
 const images = ref([
-  "https://im1.book.com.tw/image/getImage?i=https://addons.books.com.tw/G/ADbanner/fashion/i/2024/11/clothesvip/1223clothesvip_902x360.jpg&v=6762484ak&w=902&h=360",
+  "https://img.leezen.com.tw/upload/images/898cccb70a1f069f9075f547e3c0fd25.jpg",
   "https://im1.book.com.tw/image/getImage?i=https://addons.books.com.tw/G/ADbanner/2024/10/taRot/902x360b.jpg&v=6721f6d6k&w=902&h=360",
   "https://im1.book.com.tw/image/getImage?i=https://addons.books.com.tw/G/ADbanner/2024/11/locuseb_902360.jpg&v=67491054k&w=902&h=360",
 ]);
@@ -70,7 +70,7 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-.slider {
+.slidercontain {
   position: relative;
   width: 100%;
   max-width: 1000px;
@@ -80,20 +80,23 @@ onUnmounted(() => {
 
 }
 
-.carousel {
+.sliderdiv {
   display: flex;
   overflow: hidden;
   position: relative;
 }
 
-.carousel-item {
+.slideritem {
+  width: 900px;
+  height: 360px;
   min-width: 100%;
   transition: transform 0.5s ease;
 }
 
-.carousel img {
-  width: 100%;
-  height: auto;
+.slideritem img {
+  width: 100%;  
+  height: 100%; 
+  object-fit: cover;  /* 確保圖片按比例拉伸並填滿容器 */
   display: block;
 }
 

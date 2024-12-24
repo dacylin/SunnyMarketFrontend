@@ -48,6 +48,11 @@ export default {
 
 }
 
+.topsvg :hover{
+  fill:rgb(130, 130, 130, 0.7); 
+
+}
+
 .scroll-top svg {
   display: block;
 }
