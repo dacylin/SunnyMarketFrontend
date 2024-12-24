@@ -1,5 +1,64 @@
-@import './base.css';
+/* 1220在全局樣式文件中引入思源黑體 */
+@import url(//fonts.googleapis.com/earlyaccess/notosanstc.css);
 
-* {
-    font-family: 'HK Grotesk', sans-serif;
-  }
+/* 1220設置全局字體，思源黑體優先 */
+body {
+  font-family: 'Noto Sans TC', '微軟正黑體', sans-serif;
+}
+
+/* 全局樣式重置 */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Noto Sans TC', '微軟正黑體', sans-serif; /* 1220設置，思源黑體優先 */
+}
+
+/* 表單輸入框樣式 */
+input,
+select,
+textarea {
+  width: 100%;
+  border: 2px solid hsl(210, 50%, 85%);
+  border-radius: 8px; /* 更圓滑的邊角 */
+  padding: 12px;
+  font-size: 1rem;
+  background-color: hsl(0, 0%, 98%);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  outline: none;
+}
+
+/* 當輸入框獲得焦點 */
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: hsl(210, 70%, 60%);
+  box-shadow: 0 0 5px hsl(210, 70%, 80%);
+}
+
+/* 按鈕樣式 */
+/* 1223 為了設置輪播圖按鈕註解掉 
+button {
+  border: none;
+  background: linear-gradient(90deg, rgba(255,0,87,1) 0%, rgba(136,0,255,1) 50%, rgba(0,199,255,1) 100%);
+  padding: 14px 28px;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+} 
+
+/* 按鈕的懸停與點擊效果 
+button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+button:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}*/

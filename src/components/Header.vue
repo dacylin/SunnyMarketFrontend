@@ -85,7 +85,11 @@ li::after {
   background-color: #ff8000; /*橘色*/
   position: absolute;
   bottom: -15px;
-
+  height: 3px;
+  width: 100%;
+  left: 0;
+  right: 0;
+  transition: all cubic-bezier(0, 0.95, 0.55, 0.95) 1s;
   opacity: 0; /* 預設隱藏 */
 }
 
@@ -94,13 +98,15 @@ li:hover::after {
   opacity: 0.75;
   transition: all cubic-bezier(0, 0.9, 0.6, 0.9) 1s;
 }
-
+/* 調整icon區 */
 .features{
+  background-color:lavender; 
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
   margin-right: 50px; /* 調整跟右邊之間的距離 */
-  gap:10px;
+  gap:15px;
 
 }
 
