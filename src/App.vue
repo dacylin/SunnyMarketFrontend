@@ -1,4 +1,5 @@
 <script setup>
+
 import Header from "@/components/Header.vue";
 import TopButton from "./components/TopButton.vue";
 import Footer from "./components/Footer.vue";
@@ -43,3 +44,4 @@ main {
   margin-top: 24px;
 }
 </style>
+

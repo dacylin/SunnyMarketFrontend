@@ -1,3 +1,4 @@
+
 import "./assets/main.css";
 
 import { createApp } from "vue";
@@ -25,3 +26,5 @@ const app = createApp(App);
 app.use(createPinia());
 app.use(router); // 使用路由
 app.mount("#app");
+
+

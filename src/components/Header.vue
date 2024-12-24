@@ -1,3 +1,4 @@
+
 <template>
   <header id="home">
     <router-link to="/" class="logo">
@@ -84,11 +85,7 @@ li::after {
   background-color: #ff8000; /*橘色*/
   position: absolute;
   bottom: -15px;
-  height: 3px;
-  width: 100%;
-  left: 0;
-  right: 0;
-  transition: all cubic-bezier(0, 0.95, 0.55, 0.95) 1s;
+
   opacity: 0; /* 預設隱藏 */
 }
 
@@ -106,4 +103,5 @@ li:hover::after {
   gap:10px;
 
 }
+
 </style>
