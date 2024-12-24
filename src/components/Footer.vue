@@ -1,3 +1,4 @@
+
 <template>
     <footer class = "foot">
         <p>Copyright &copy; 2024 Sunny Market</p>

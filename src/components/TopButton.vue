@@ -1,26 +1,22 @@
+
+<!-- 到頂端按鈕 -->
+
 <template>
   <div class="scroll-top" @click="scrollTop">
-    <svg xmlns="http://www.w3.org/2000/svg" 
-    fill="none" 
-    viewBox="0 0 24 24" 
-    stroke-width="1" 
-    stroke="red"  
-    class="top-svg"
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      fill="currentColor"
+      class="topsvg"
+      viewBox="0 0 16 16"
     >
-    <circle cx="12.5" 
-    cy="12.5" 
-    r="9" 
-    stroke="grey" 
-    stroke-width="1" 
-    fill="transparent" />
-  <path stroke-linecap="round" 
-  stroke-linejoin="round" 
-  d="m15 11.25-3-3m0 0-3 3m3-3v7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-</svg>
-
+      <path
+        d="M16 8A8 8 0 1 0 0 8a8 8 0 0 0 16 0m-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707z"
+      />
+    </svg>
   </div>
 </template>
-
 
 <script>
 
@@ -40,17 +36,22 @@ export default {
 <style>
 .scroll-top {
   position: fixed;
-  right: 2em;  
-  bottom: 2em; 
-  cursor: pointer; 
+  right: 2em;
+  bottom: 2em;
+  cursor: pointer;
 }
 
-.top-svg {
-  width: 5em; /* 控制圖標大小 */
-  height: 5em; /* 控制圖標大小 */
+.topsvg {
+  width: 2em; /* 控制圖標大小 */
+  height: 2em; /* 控制圖標大小 */
+  fill:grey; /*#ff8000 橘色*/
+
 }
 
 .scroll-top svg {
   display: block;
 }
-</style> 
+
+</style>
+
+ 
