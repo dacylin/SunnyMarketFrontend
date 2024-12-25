@@ -1,9 +1,10 @@
-import './assets/main.css'
+import { createApp } from "vue";
+import './assets/main.css';  //引入全域 main.css
+import App from "./App.vue";
+import router from "./router"; // 引入路由配置
 
-import { createApp } from 'vue'
-import App from './App.vue'
-import router from './router'
 
-createApp(App)
-.use(router)
-.mount('#app')
+const app = createApp(App);
+app.use(router); // 使用路由
+app.mount("#app");
+

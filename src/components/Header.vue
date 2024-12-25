@@ -1,108 +1,114 @@
-<!-- nav參考樂田、加到最上頁按鈕、購物車參考哈肯鋪drawer -->
 <template>
-  <nav class="top-nav">
-    <div class="logo">
-      <img src="https://images.plurk.com/4EXN191BOki6RBVau6czWE.png" alt="Sunny Market Logo">
-    </div>
-    <ul>
-      <!-- 線上商城 /online-shop -->
-      <li class="btn"><a href="#" class="navitem">線上商城</a></li>
-
-      <!-- 查詢產品 /products -->
-      <li class="btn"><router-link to="/products" class="navitem">查詢產品</router-link></li>
-
-      <!-- 常見問題 /question-->
-      <li class="btn"><a href="#" class="navitem">常見問題</a></li>
-
-      <!-- 關於我們 /about-us-->
-      <li class="btn"><a href="#" class="navitem">關於我們</a></li>
-
-      <!-- 動態顯示登入或登出 -->
-       <!-- <div v-if="isLoggedIn">
-        <li class="btn"><a href="#" class="navitem" @click="logout">登出</a></li>
-        <li class="btn"><a href="#" class="navitem" @click="mypage">會員中心</a></li>
-      </div>
-      <div v-else>
-        <li class="btn"><a href="#" class="navitem" @click="login">登入</a></li>
-        <li class="btn"><a href="#" class="navitem" @click="register">註冊</a></li>
-      </div> -->
-
-      <!-- 購物車 /cart-->
-      <li class="btn"><a href="#" class="navitem">購物車</a></li>
+  <header id="home">
+    <router-link to="/" class="logo">
+    <img src="@/assets/sunnymarket_nobg.png" alt="Logo" />
+  </router-link>
+    <ul class="nav">
+      <!-- 帶出nav.js的資料 -->
+      <li v-for="nav in navData" v-bind:key="nav.id">
+        <router-link to="/" class="navitem">{{ nav.name }}</router-link>
+      </li>
     </ul>
-  </nav>
-  <!-- <h1>gogo</h1><h1>gogo</h1>
-  <h1>gogo</h1><h1>gogo</h1>
-  <h1>gogo</h1><h1>gogo</h1>
-  <h1>gogo</h1><h1>gogo</h1> -->
+    <div class="features">
+      <UserBtn />
+      <CartBtn />
+    </div>
+  </header>
 </template>
+<script setup>
+import navData from "@/nav/nav.js"; //默認導入 navData
+import CartBtn from "@/components/CartBtn.vue"; //導入 購物車按鈕組件
+import UserBtn from "@/components/UserBtn.vue"; //導入 登入按鈕組件
+import { ref } from "vue";
+
+const navs = ref(navData);
+</script>
 
 <script setup>
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=HK+Grotesk&display=swap');
-
-.logo img {
-  max-height: 70px; 
-  margin-left: 50px; 
-  margin-top: 5px;
-}
-
-.top-nav {
-  background-color: white;
+header {
+  margin-top: 24px; /* 控制跟上方元素60px */
+  width: 100%; /* 控制寬度跟著main設定 */
   padding: 10px;
-  box-shadow: 0 2px 5px rgba(150, 150, 150, 0.3); 
-  border-bottom: 2px solid rgba(150, 150, 150, 0.3);
+  height: 100px;
+  margin: auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: auto;
-  height:100px;
+  background-color: white;
+  box-shadow: 0 2px 5px rgba(150, 150, 150, 0.3); /* 下陰影 */
+  border-bottom: 2px solid rgba(150, 150, 150, 0.3);
 }
 
-.btn .navitem {
+.logo {
+  width: 180px; /* 或其他你需要的寬度 */
+  height: auto; /* 保持圖片比例 */
+  margin-left: 50px; /* 調整logo與ul之間的距離 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo img {
+  width: 100%; /*跟著父容器比例*/
+}
+
+.nav {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav li {
+  list-style: none; /* 去除圓點 */
+  margin: 0 20px;
   font-size: 1em;
-  font-family: 'HK Grotesk', sans-serif; 
-  font-weight: bold;
-  padding: 0.5em;
-  position: relative;
-  cursor: pointer;
-  color: grey;
 }
 
-.btn .navitem:after {
-  content: '';
-  background-color: #FF8000; 
+/*以下 設定浮出文字下底線 */
+.navitem {
+  color: grey;
+  text-decoration: none;
+  font-weight: bold;
+  letter-spacing: 2px;
+  cursor: pointer;
+  font-size: 1em;
+}
+
+li {
+  position: relative; /* 設定 li 為相對定位 */
+}
+
+li::after {
+  content: "";
+  background-color: #ff8000; /*橘色*/
   position: absolute;
-  bottom: -5px;
+  bottom: -15px;
   height: 3px;
   width: 100%;
   left: 0;
   right: 0;
   transition: all cubic-bezier(0, 0.95, 0.55, 0.95) 1s;
-  opacity: 0;
+  opacity: 0; /* 預設隱藏 */
 }
 
-.btn .navitem:hover:after {
-  bottom: 0;
+li:hover::after {
+  bottom: -5px;
   opacity: 0.75;
   transition: all cubic-bezier(0, 0.9, 0.6, 0.9) 1s;
 }
-
-ul {
-  list-style-type: none;
+/* 調整icon區 */
+.features{
+  background-color:lavender; 
   display: flex;
-  gap: 20px;
-  margin-right: 5%;
-}
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-right: 50px; /* 調整跟右邊之間的距離 */
+  gap:15px;
 
-li {
-  display: inline;
 }
-
-a {
-text-decoration: none;
-}
-
 </style>

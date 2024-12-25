@@ -4,7 +4,7 @@
 
 | 類型        | 說明                                      | 示例                                         |
 |-------------|-------------------------------------------|----------------------------------------------|
-| `feat`      | 新增功能                                  | `feat(auth): add password recovery`          |
+| `add`      | 新增功能                                  | `feat(auth): add password recovery`          |
 | `fix`       | 修復錯誤                                  | `fix(api): resolve null pointer exception`   |
 | `docs`      | 文件變更，例如修改 README 或註解          | `docs: update API usage in README`           |
 | `style`     | 代碼風格調整，無邏輯改變，例如格式化       | `style(css): fix button alignment`           |
@@ -18,3 +18,4 @@
 | `revert`    | 撤銷之前的提交                            | `revert: revert "fix: update login logic"`   |
 
 ---
+
