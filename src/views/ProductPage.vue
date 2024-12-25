@@ -7,14 +7,14 @@
           <option value="SEAFOOD">海鲜</option>
     </select>
 
-    <label for="category-select">選擇商品排序</label>
-    <select id="category-select" v-model="selectedCategory" @change="fetchProducts">
+    <label for="sort-select">選擇商品排序</label>
+    <select id="sort-select" v-model="selectedSort" @change="fetchProducts">
           <option value="priceSort">價格</option>
           <option value="timeSort">時間</option>
     </select>
 
-    <label for="category-select">選擇排序方式</label>
-    <select id="category-select" v-model="selectedCategory" @change="fetchProducts">
+    <label for="order-select">選擇排序方式</label>
+    <select id="order-select" v-model="sortOrder" @change="fetchProducts">
           <option value="newSort">新>>舊</option>
           <option value="oldSort">舊>>新</option>
           
@@ -52,6 +52,9 @@
   import ProductCard from "./ProductCard.vue";
 
   const selectedCategory = ref('');
+  const selectedSort = ref('priceSort');
+  const sortOrder = ref('newSort');
+
   const products = ref([]);
   const currentPage = ref(1);
   const pageSize = ref(6);
@@ -63,11 +66,13 @@
 
   const fetchProducts = async (page) =>  {
     try {
-      const response = await axios.get(`http://localhost:8080/api/products/Page`,{
+      const response = await axios.get(`http://localhost:8080/api/products/getAllProducts`,{
         params : {
           pageNum: currentPage.value,
           pageSize: pageSize.value,
-          category: selectedCategory.value
+          category: selectedCategory.value,
+          // sort: selectedSort.value,
+          // order: sortOrder.value
 
     }
   });    
