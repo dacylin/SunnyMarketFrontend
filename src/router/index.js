@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '@/views/Home/Home.vue';
+import AboutUs from '@/views/AboutUs.vue';
 import ProductDetail from '@/views/ProductDetail.vue';
 
 const router = createRouter({
@@ -9,6 +10,11 @@ const router = createRouter({
       path: '/',
       name: 'Home',
       component: Home  // 首頁路由
+    },
+    {
+      path: '/aboutus',
+      name: 'AboutUs',
+      component: AboutUs // 關於我們
     },
     {
       path: '/product/:productId',

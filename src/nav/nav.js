@@ -1,4 +1,4 @@
-/* 這裡是導覽列的link */
+/* 這裡用來儲存導覽列資料，router設置在index.js */
 const navData = [
   {
     id: 1,
@@ -8,7 +8,7 @@ const navData = [
   },
   {
     id: 2,
-    name: "門市據點",
+    name: "關於我們",
     link: "aboutus",
     active: false,
   },

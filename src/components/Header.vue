@@ -7,7 +7,7 @@
     <ul class="nav">
       <!-- 帶出nav.js的資料 -->
       <li v-for="nav in navData" v-bind:key="nav.id">
-        <router-link to="/" class="navitem">{{ nav.name }}</router-link>
+        <router-link :to="`/${nav.link}`" class="navitem">{{ nav.name }}</router-link>
       </li>
     </ul>
     <div class="features">
