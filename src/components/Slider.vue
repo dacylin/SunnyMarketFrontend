@@ -76,7 +76,7 @@ onUnmounted(() => {
   max-width: 1000px;
   margin: 30px auto;
   text-align: center;
-  top: -10px; /*控制slider在main中央*/
+  top:20px;
 }
 
 .sliderdiv {

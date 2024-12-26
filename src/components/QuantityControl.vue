@@ -48,4 +48,9 @@ const decrease = () => {
   font-size: 1em;
   font-weight: bold;
 }
+
+.quantity-btn:hover {
+ opacity: 0.7;
+  
+}
 </style>
