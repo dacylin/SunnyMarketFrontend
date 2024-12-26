@@ -1,5 +1,6 @@
 <template>
   <Header />
+  <TopButton />
   <div class="container">
     <div class="imgdiv">
       <img :src="product.imageUrl" alt="Product Image 預定顯示圖片" />
@@ -9,13 +10,18 @@
       <span v-if="product.category === 'SEAFOOD'" class="category seafood">
         SEAFOOD
       </span>
-      <span v-else-if="product.category === 'FOOD'" class="category food">
+      <span v-else="product.category === 'FOOD'" class="category food">
         FOOD
       </span>
       <h2>{{ product.productName }}</h2>
-      <h4>產品成份</h4>
+      <h4>產品介紹</h4>
       <p>{{ product.description }}</p>
       <h3>NT$ {{ product.price }}</h3>
+
+      <!-- 數量調整按鈕 -->
+      <QuantityControl v-model="quantity" />
+
+      <!-- 加入購物車按鈕 -->
       <button class="cartbtn">加入購物車</button>
     </div>
   </div>
@@ -25,13 +31,17 @@
 <script setup>
 import Header from "@/components/Header.vue"; // 引入 Header 元件
 import Footer from "@/components/Footer.vue"; // 引入 Footer 元件
+import TopButton from "@/components/TopButton.vue"; // 引入 TopButton 元件
+import QuantityControl from "@/components/QuantityControl.vue"; // 引入 +-數量按鈕組件
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 
 // 使用 `ref` 定義資料
 const product = ref({});
+// 數量按鈕控制
+const quantity = ref(1);
 
-// 使用 `useRoute` 獲取路由參數
+// 路由
 const route = useRoute();
 const productId = route.params.productId;
 
@@ -56,6 +66,9 @@ const getProductDetails = async (productId) => {
 onMounted(() => {
   getProductDetails(productId);
 });
+
+
+
 </script>
 
 <style scoped>
@@ -68,14 +81,18 @@ onMounted(() => {
   align-items: center;
   gap: 50px;
 }
+
 /* 控制圖片 class */
 .imgdiv {
-  width: 400px; /* 圖片寬度 */
-  height: auto; /* 圖片高度 */
+  width: 400px;
+  /* 圖片寬度 */
+  height: auto;
+  /* 圖片高度 */
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 .imgdiv img {
   width: 100%;
   object-fit: cover;
@@ -86,9 +103,12 @@ onMounted(() => {
 .content {
   display: flex;
   flex-direction: column;
-  width: 400px; /* 圖片寬度 */
-  height: 400px; /* 圖片高度 */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 增加陰影 */
+  width: 400px;
+  /* 圖片寬度 */
+  height: 400px;
+  /* 圖片高度 */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  /* 增加陰影 */
   padding: 30px;
   gap: 10px;
 }
@@ -100,27 +120,31 @@ onMounted(() => {
 }
 
 .category.food {
-  color: pink;
+  color: coral;
+  font-size: 1em;
 }
 
 .category.seafood {
-  color: lightblue;
+  color: skyblue;
   font-size: 1em;
 }
 
 h4 {
   color: dimgray;
 }
+
 h3 {
   color: orangered;
 }
+
+
 .cartbtn {
   background-color: darkorange;
   color: white;
-  margin-top: 30px; /*跟上方文字距離 */
   border: none;
   font-size: 1em;
   padding: 10px;
+  border-radius: 5px;
 }
 
 .cartbtn:hover {

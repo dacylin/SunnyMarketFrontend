@@ -23,8 +23,8 @@ import { ref, onMounted, onUnmounted } from "vue";
 // 圖片數據
 const images = ref([
   "https://img.leezen.com.tw/upload/images/898cccb70a1f069f9075f547e3c0fd25.jpg",
-  "https://im1.book.com.tw/image/getImage?i=https://addons.books.com.tw/G/ADbanner/2024/10/taRot/902x360b.jpg&v=6721f6d6k&w=902&h=360",
-  "https://im1.book.com.tw/image/getImage?i=https://addons.books.com.tw/G/ADbanner/2024/11/locuseb_902360.jpg&v=67491054k&w=902&h=360",
+  "https://images.plurk.com/5ePHYzY3c1uktbhdLvChVQ.png",
+  "https://images.plurk.com/1acg5IibdSa4OSs7tSeHoG.png",
 ]);
 
 // 目前顯示的圖片索引
@@ -74,10 +74,9 @@ onUnmounted(() => {
   position: relative;
   width: 100%;
   max-width: 1000px;
-  margin: 0 auto;
+  margin: 30px auto;
   text-align: center;
-  top: -10px; /*控制slider在main中央*/ 
-
+  top:20px;
 }
 
 .sliderdiv {
@@ -87,8 +86,8 @@ onUnmounted(() => {
 }
 
 .slideritem {
-  width: 900px;
-  height: 360px;
+  width: 1000px;
+  height: 400px;
   min-width: 100%;
   transition: transform 0.5s ease;
 }

@@ -1,23 +1,14 @@
 <template>
   <div class="select-container">
     <label for="category-select">選擇商品類別</label>
-    <select id="category-select" v-model="selectedCategory" @change="fetchProducts">
-          <option value="">全部商品</option>        
-          <option value="FOOD">食品</option>
-          <option value="SEAFOOD">海鲜</option>
-    </select>
-
-    <label for="sort-select">選擇商品排序</label>
-    <select id="sort-select" v-model="selectedSort" @change="fetchProducts">
-          <option value="priceSort">價格</option>
-          <option value="timeSort">時間</option>
-    </select>
-
-    <label for="order-select">選擇排序方式</label>
-    <select id="order-select" v-model="sortOrder" @change="fetchProducts">
-          <option value="newSort">新>>舊</option>
-          <option value="oldSort">舊>>新</option>
-          
+    <select
+      id="category-select"
+      v-model="selectedCategory"
+      @change="fetchProducts"
+    >
+      <option value="">全部商品</option>
+      <option value="FOOD">食品</option>
+      <option value="SEAFOOD">海鲜</option>
     </select>
   </div>
 
@@ -36,56 +27,57 @@
       />
     </div>
   </div>
-    
 
-    <div class="pagination">
-      <button @click="changePage(currentPage - 1)" :disabled="currentPage <= 1">上一頁</button>
-      <span>第 {{ currentPage }} 頁，共 {{ totalPages }} 頁</span>
-      <button @click="changePage(currentPage + 1)" :disabled="currentPage >= totalPages">下一頁</button>
-    </div>
-      
+  <div class="pagination">
+    <button @click="changePage(currentPage - 1)" :disabled="currentPage <= 1">
+      上一頁
+    </button>
+    <span>第 {{ currentPage }} 頁，共 {{ totalPages }} 頁</span>
+    <button
+      @click="changePage(currentPage + 1)"
+      :disabled="currentPage >= totalPages"
+    >
+      下一頁
+    </button>
+  </div>
 </template>
 
 <script setup>
-  import axios from "axios";
-  import { onMounted, ref, computed } from "vue"
-  import ProductCard from "./ProductCard.vue";
+import axios from "axios";
+import { onMounted, ref, computed } from "vue";
+import ProductCard from "./ProductCard.vue";
 
-  const selectedCategory = ref('');
-  const selectedSort = ref('priceSort');
-  const sortOrder = ref('newSort');
+const selectedCategory = ref("");
+const products = ref([]);
+const currentPage = ref(1);
+const pageSize = ref(6);
+const totalRecords = ref(0);
 
-  const products = ref([]);
-  const currentPage = ref(1);
-  const pageSize = ref(6);
-  const totalRecords = ref(0);
+const totalPages = computed(() =>
+  Math.ceil(totalRecords.value / pageSize.value)
+);
 
-
-  const totalPages = computed(() => Math.ceil(totalRecords.value / pageSize.value));
-
-
-  const fetchProducts = async (page) =>  {
-    try {
-      const response = await axios.get(`http://localhost:8080/api/products/getAllProducts`,{
-        params : {
-          pageNum: currentPage.value,
-          pageSize: pageSize.value,
-          category: selectedCategory.value,
-          // sort: selectedSort.value,
-          // order: sortOrder.value
-
-    }
-  });    
+const fetchProducts = async (page) => {
+  try {
+    const response = await axios.get("http://localhost:8080/api/products/getAllProducts", {
+      params: {
+        pageNum: 1,
+        pageSize: 10,
+        category: selectedCategory.value,
+    
+      },
+      
+    });
+    
     products.value = response.data.list;
     totalRecords.value = response.data.total;
-    
   } catch (error) {
-    console.error('Failed to fetch products:', error);
+    console.error("Failed to fetch products:", error);
   }
-}
+};
 
-const changePage = (page) =>{
-  if (page >= 1 &&  page <= totalPages.value) {
+const changePage = (page) => {
+  if (page >= 1 && page <= totalPages.value) {
     currentPage.value = page;
     fetchProducts();
   }
@@ -97,7 +89,6 @@ onMounted(fetchProducts);
 
 
 <style scoped>
-
 .select-container {
   display: flex;
   flex-direction: column;
@@ -106,7 +97,7 @@ onMounted(fetchProducts);
   margin: 20px 0;
 }
 
-.product-container-controller{
+.product-container-controller {
   display: flex;
   justify-content: center;
   padding: 20px;
@@ -133,7 +124,7 @@ onMounted(fetchProducts);
 .pagination button {
   padding: 0.5em 1em;
   margin: 0 10px;
-  background-color: #007BFF;
+  background-color: #007bff;
   color: white;
   border: none;
   border-radius: 5px;
@@ -143,5 +134,4 @@ onMounted(fetchProducts);
 .pagination button:disabled {
   background-color: #ccc;
 }
-
 </style>

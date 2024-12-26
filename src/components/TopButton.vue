@@ -1,4 +1,3 @@
-
 <!-- 到頂端按鈕 -->
 
 <template>
@@ -19,7 +18,6 @@
 </template>
 
 <script>
-
 export default {
   name: "ScrollTopBtn",
   methods: {
@@ -39,24 +37,20 @@ export default {
   right: 2em;
   bottom: 2em;
   cursor: pointer;
+  z-index: 9999; /* 確保它在頁面頂層 */
 }
 
 .topsvg {
   width: 2em; /* 控制圖標大小 */
   height: 2em; /* 控制圖標大小 */
-  fill:grey; /*#ff8000 橘色*/
-
+  fill: rgb(100, 170, 0, 0.7); /*綠色*/
 }
 
-.topsvg :hover{
-  fill:rgb(130, 130, 130, 0.7); 
-
+.topsvg :hover {
+  fill: rgb(100, 170, 0, 0.5);
 }
 
 .scroll-top svg {
   display: block;
 }
-
 </style>
-
- 
