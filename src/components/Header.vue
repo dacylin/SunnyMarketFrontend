@@ -1,4 +1,3 @@
-
 <template>
   <header id="home">
     <router-link to="/" class="logo">
@@ -23,6 +22,9 @@ import UserBtn from "@/components/UserBtn.vue"; //導入 登入按鈕組件
 import { ref } from "vue";
 
 const navs = ref(navData);
+</script>
+
+<script setup>
 </script>
 
 <style scoped>
@@ -110,5 +112,4 @@ li:hover::after {
   gap:20px;
 
 }
-
 </style>

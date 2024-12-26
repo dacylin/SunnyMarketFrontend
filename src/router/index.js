@@ -30,6 +30,7 @@ const router = createRouter({
       component: ProductDetail  // 商品詳情頁面路由
     }
   ]
+
 });
 
 export default router;
