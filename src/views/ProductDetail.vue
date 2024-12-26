@@ -14,7 +14,7 @@
         FOOD
       </span>
       <h2>{{ product.productName }}</h2>
-      <h4>產品成份</h4>
+      <h4>產品介紹</h4>
       <p>{{ product.description }}</p>
       <h3>NT$ {{ product.price }}</h3>
 
@@ -137,22 +137,6 @@ h3 {
   color: orangered;
 }
 
-.numbtn {
-  background-color: rgba(170, 170, 170, 0.1);
-  border-radius: 5px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.quantity-btn {
-  background-color: lightgray;
-  border: none;
-  border-radius: 5px;
-  padding: 10px;
-  font-size: 1em;
-  font-weight: bold;
-}
 
 .cartbtn {
   background-color: darkorange;

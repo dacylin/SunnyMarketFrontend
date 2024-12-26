@@ -1,21 +1,16 @@
-/* 這裡用來儲存導覽列資料，router設置在index.js */
+/* 這裡用來儲存導覽列資料，router設置要放在index.js */
+
 const navData = [
   {
     id: 1,
     name: "線上商城",
-    link: "productlist",
+    link: "ProductPage", //要跟index.js 的 name 相同
     active: true,
   },
   {
     id: 2,
     name: "關於我們",
-    link: "aboutus",
-    active: false,
-  },
-  {
-    id: 3,
-    name: "聯絡我們",
-    link: "contact",
+    link: "AboutUs", //要跟index.js 的 name 相同
     active: false,
   },
 ];

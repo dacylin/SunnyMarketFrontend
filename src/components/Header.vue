@@ -7,7 +7,7 @@
     <ul class="nav">
       <!-- 帶出nav.js的資料 -->
       <li v-for="nav in navData" v-bind:key="nav.id">
-        <router-link :to="`/${nav.link}`" class="navitem">{{ nav.name }}</router-link>
+        <router-link :to="{ name: nav.link }" class="navitem">{{ nav.name }}</router-link>
       </li>
     </ul>
     <div class="features">
@@ -33,7 +33,7 @@ header {
   height: 100px;
   margin: auto;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   background-color: white;
   box-shadow: 0 2px 5px rgba(150, 150, 150, 0.3); /* 下陰影 */
@@ -43,7 +43,7 @@ header {
 .logo {
   width: 180px; /* 或其他你需要的寬度 */
   height: auto; /* 保持圖片比例 */
-  margin-left: 50px; /* 調整logo與ul之間的距離 */
+  /*margin-left: 50px;  調整logo與ul之間的距離 */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -58,11 +58,12 @@ header {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  gap:30px;
 }
 
 .nav li {
   list-style: none; /* 去除圓點 */
-  margin: 0 20px;
+  margin: 0 30px;
   font-size: 1em;
 }
 
@@ -105,8 +106,8 @@ li:hover::after {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  margin-right: 50px; /* 調整跟右邊之間的距離 */
-  gap:15px;
+  /*margin-right: 70px;  調整跟右邊之間的距離 */
+  gap:20px;
 
 }
 
