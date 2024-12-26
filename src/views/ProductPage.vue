@@ -1,4 +1,5 @@
 <template>
+  <Header />
   <div class="select-container">
     <label for="category-select">選擇商品類別</label>
     <select
@@ -22,8 +23,7 @@
         :productName="product.productName"
         :imageUrl="product.imageUrl"
         :price="product.price"
-        :stock="product.stock"
-        :description="product.description"
+        :stock="product.stock"     
       />
     </div>
   </div>
@@ -40,17 +40,23 @@
       下一頁
     </button>
   </div>
+  <TopButton />
+  <Footer />
 </template>
 
 <script setup>
 import axios from "axios";
 import { onMounted, ref, computed } from "vue";
 import ProductCard from "./ProductCard.vue";
+import Header from "@/components/Header.vue"; // 引入 Header 元件
+import Footer from "@/components/Footer.vue"; // 引入 Footer 元件
+import TopButton from "@/components/TopButton.vue"; //引入 TopButton 元件
+
 
 const selectedCategory = ref("");
 const products = ref([]);
 const currentPage = ref(1);
-const pageSize = ref(6);
+const pageSize = ref(12);
 const totalRecords = ref(0);
 
 const totalPages = computed(() =>
@@ -61,8 +67,8 @@ const fetchProducts = async (page) => {
   try {
     const response = await axios.get("http://localhost:8080/api/products/getAllProducts", {
       params: {
-        pageNum: 1,
-        pageSize: 10,
+        pageNum: currentPage.value,
+        pageSize: 12,
         category: selectedCategory.value,
     
       },
