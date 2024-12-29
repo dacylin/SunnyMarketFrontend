@@ -1,49 +1,96 @@
 <template>
     <div class="common-layout">
-        <el-container>
-            <el-header height="100px">
-                頂部
-                <el-button type="primary" @click="getUserInfo">獲取使用者訊息</el-button>
-                <el-button type="success" @click="Logout">登出</el-button>
-            </el-header>
+        <div class="header">
+            頂部
+            <button class="btn-primary" @click="getUserInfo">獲取使用者訊息</button>
+            <button class="btn-success" @click="Logout">登出</button>
+        </div>
 
-            <el-container>
-                <el-aside width="200px">
-                    菜單欄
-                </el-aside>
-                <el-main>
-                    展示區
-                </el-main>
-            </el-container>
-        </el-container>
+        <div class="container">
+            <aside class="aside">
+                菜單欄
+            </aside>
+            <main class="main">
+                展示區
+            </main>
+        </div>
     </div>
-
-
 </template>
 
-<script setup name="Layout">
-import { ref } from 'vue';
-import api from '@/utils/Request';
-import { ElMessage } from 'element-plus';
+<script setup>
 import { useRouter } from 'vue-router';
-import useToeknStore from '@/stores/TokenCheck';
+import api from '@/utils/Request';
+import useTokenStore from '@/stores/TokenCheck';
+
 const router = useRouter();
 
 const Logout = async () => {
-    let data = await api.get("/user/logout");
+    let { data } = await api.get("/user/logout");
     if (data.data.code === 200) {
-        ElMessage.success('退出成功');
+        alert('退出成功');
         // 清除token
-        useToeknStore().removeToken();
+        useTokenStore().removeToken();
         router.replace({ name: 'login' });
     } else {
-        ElMessage.error('退出失败');
+        alert('退出失败');
     }
 };
 
 const getUserInfo = async () => {
-    let data = await api.get("/user/info");
+    let { data } = await api.get("/user/info");
     console.log('@', data);
 };
-
 </script>
+
+<style scoped>
+.common-layout {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.header {
+    height: 100px;
+    background-color: #fff;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.container {
+    display: flex;
+    flex: 1;
+}
+
+.aside {
+    width: 200px;
+    background-color: black;
+    color: white;
+    padding: 20px;
+}
+
+.main {
+    flex: 1;
+    background-color: #f0f2f5;
+    padding: 20px;
+}
+
+button {
+    padding: 8px 16px;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.btn-primary {
+    background-color: #409EFF;
+    color: white;
+}
+
+.btn-success {
+    background-color: #67C23A;
+    color: white;
+    margin-left: 10px;
+}
+</style>
