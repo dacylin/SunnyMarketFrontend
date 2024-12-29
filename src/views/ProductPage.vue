@@ -1,11 +1,8 @@
 <template>
+  <Header />
   <div class="select-container">
     <label for="category-select">選擇商品類別</label>
-    <select
-      id="category-select"
-      v-model="selectedCategory"
-      @change="fetchProducts"
-    >
+    <select id="category-select" v-model="selectedCategory" @change="fetchProducts">
       <option value="">全部商品</option>
       <option value="FOOD">食品</option>
       <option value="SEAFOOD">海鲜</option>
@@ -14,17 +11,9 @@
 
   <div class="product-container-controller">
     <div class="product-container">
-      <ProductCard
-        v-for="product in products"
-        :key="product.product_id"
-        :productId="product.product_id"
-        :category="product.category"
-        :productName="product.productName"
-        :imageUrl="product.imageUrl"
-        :price="product.price"
-        :stock="product.stock"
-        :description="product.description"
-      />
+      <ProductCard v-for="product in products" :key="product.product_id" :productId="product.product_id"
+        :category="product.category" :productName="product.productName" :imageUrl="product.imageUrl"
+        :price="product.price" :stock="product.stock" :description="product.description" />
     </div>
   </div>
 
@@ -33,19 +22,19 @@
       上一頁
     </button>
     <span>第 {{ currentPage }} 頁，共 {{ totalPages }} 頁</span>
-    <button
-      @click="changePage(currentPage + 1)"
-      :disabled="currentPage >= totalPages"
-    >
+    <button @click="changePage(currentPage + 1)" :disabled="currentPage >= totalPages">
       下一頁
     </button>
   </div>
+  <Footer />
 </template>
 
 <script setup>
 import axios from "axios";
 import { onMounted, ref, computed } from "vue";
 import ProductCard from "./ProductCard.vue";
+import Header from "@/components/Header.vue"
+import Footer from "@/components/Footer.vue"
 
 const selectedCategory = ref("");
 const products = ref([]);
@@ -61,14 +50,14 @@ const fetchProducts = async (page) => {
   try {
     const response = await axios.get("http://localhost:8080/api/products/getAllProducts", {
       params: {
-        pageNum: 1,
-        pageSize: 10,
+        pageNum: currentPage.value,
+        pageSize: 12,
         category: selectedCategory.value,
-    
+
       },
-      
+
     });
-    
+
     products.value = response.data.list;
     totalRecords.value = response.data.total;
   } catch (error) {
