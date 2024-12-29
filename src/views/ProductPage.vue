@@ -2,11 +2,7 @@
   <Header />
   <div class="select-container">
     <label for="category-select">選擇商品類別</label>
-    <select
-      id="category-select"
-      v-model="selectedCategory"
-      @change="fetchProducts"
-    >
+    <select id="category-select" v-model="selectedCategory" @change="fetchProducts">
       <option value="">全部商品</option>
       <option value="FOOD">食品</option>
       <option value="SEAFOOD">海鲜</option>
@@ -33,14 +29,13 @@
       上一頁
     </button>
     <span>第 {{ currentPage }} 頁，共 {{ totalPages }} 頁</span>
-    <button
-      @click="changePage(currentPage + 1)"
-      :disabled="currentPage >= totalPages"
-    >
+    <button @click="changePage(currentPage + 1)" :disabled="currentPage >= totalPages">
       下一頁
     </button>
   </div>
+
   <TopButton />
+
   <Footer />
 </template>
 
@@ -48,9 +43,14 @@
 import axios from "axios";
 import { onMounted, ref, computed } from "vue";
 import ProductCard from "./ProductCard.vue";
+
+import Header from "@/components/Header.vue"
+import Footer from "@/components/Footer.vue"
+
 import Header from "@/components/Header.vue"; // 引入 Header 元件
 import Footer from "@/components/Footer.vue"; // 引入 Footer 元件
 import TopButton from "@/components/TopButton.vue"; //引入 TopButton 元件
+
 
 
 const selectedCategory = ref("");
@@ -70,11 +70,11 @@ const fetchProducts = async (page) => {
         pageNum: currentPage.value,
         pageSize: 12,
         category: selectedCategory.value,
-    
+
       },
-      
+
     });
-    
+
     products.value = response.data.list;
     totalRecords.value = response.data.total;
   } catch (error) {

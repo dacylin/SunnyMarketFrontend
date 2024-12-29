@@ -5,6 +5,8 @@ import Home from '@/views/Home/Home.vue';
 import AboutUs from '@/views/AboutUs.vue';
 import ProductDetail from '@/views/ProductDetail.vue';
 import ProductPage from '@/views/ProductPage.vue';
+import Login from '@/views/Login.vue';
+import Layout from '@/views/Layout.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL), // 定義路由歷史模式
@@ -28,6 +30,16 @@ const router = createRouter({
       path: '/products/:productId',
       name: 'ProductDetail',
       component: ProductDetail  // 商品詳情頁面路由
+    },
+    {
+      path: '/user/Login',
+      name: 'Login',
+      component: Login 
+    },
+    {
+      path: '/user/Layout',
+      name: 'Layout',
+      component: Layout 
     }
   ]
 
