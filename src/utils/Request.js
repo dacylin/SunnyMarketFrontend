@@ -1,6 +1,5 @@
 import axios from "axios";
 import useTokenStore from '@/stores/TokenCheck'
-import { ElMessage } from 'element-plus';
 
 // 先建一个api
 const api = axios.create({
