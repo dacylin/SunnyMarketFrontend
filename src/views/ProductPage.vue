@@ -1,14 +1,17 @@
 <template>
   <Header />
   <div class="page-container">
-  
     <!-- 分類篩選和排序 -->
     <div class="sort-options">
       <div class="sort-center">
         <!-- 分類篩選 -->
         <div class="sort-item">
           <label for="category-select">分類篩選</label>
-          <select id="category-select" v-model="selectedCategory" @change="onCategoryChange">
+          <select
+            id="category-select"
+            v-model="selectedCategory"
+            @change="onCategoryChange"
+          >
             <option value="">全部商品</option>
             <option value="FOOD">食品</option>
             <option value="SEAFOOD">海鲜</option>
@@ -27,7 +30,11 @@
         <!-- 排序方式 -->
         <div class="sort-item">
           <label for="order-price">排序方式</label>
-          <select id="order-price" v-model="selectedOrder" @change="fetchProducts">
+          <select
+            id="order-price"
+            v-model="selectedOrder"
+            @change="fetchProducts"
+          >
             <option value="ASC">升冪</option>
             <option value="DESC">降冪</option>
           </select>
@@ -38,37 +45,45 @@
     <!-- 商品列表 -->
     <div class="product-container">
       <div class="product-grid">
-        <div v-for="product in products" :key="product.id" class="product-card">
+        <router-link
+          v-for="product in products"
+          :key="product.id"
+          :to="`/products/${product.productId}`"
+          class="product-card"
+        >
           <img :src="product.imageUrl" alt="商品圖片" class="product-image" />
           <div class="product-details">
-            <h3 class="product-title">{{ product.name }}</h3>
+            <h3 class="product-title">{{ product.productName }}</h3>
+            <p class="product-category">{{ product.category }}</p>
             <p class="product-price">NT$ {{ product.price }}</p>
-            <p class="product-category">分類：{{ product.category }}</p>
             <p class="product-description">{{ product.description }}</p>
           </div>
           <button class="add-to-cart">加入購物車</button>
-      </div>
+        </router-link>
       </div>
     </div>
 
     <!-- 分頁功能 -->
     <div class="pagination" v-if="totalPages > 1">
-      <button @click="changePage(page - 1)" :disabled="page === 1">上一頁</button>
-      <span>第 {{ page }} 頁，共 {{ totalPages }} 頁</span>
-      <button @click="changePage(page + 1)" :disabled="page === totalPages">下一頁</button>
+      <button @click="changePage(page - 1)" :disabled="page === 1">
+        上一頁
+      </button>
+      <span>第 {{ page }} 頁 | 共 {{ totalPages }} 頁</span>
+      <button @click="changePage(page + 1)" :disabled="page === totalPages">
+        下一頁
+      </button>
     </div>
-  </div>  
+  </div>
   <TopButton />
   <Footer />
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import axios from 'axios';
+import { ref, onMounted } from "vue";
+import axios from "axios";
 import Header from "@/components/Header.vue"; // 引入 Header 元件
 import Footer from "@/components/Footer.vue"; // 引入 Footer 元件
 import TopButton from "@/components/TopButton.vue"; //引入 TopButton 元件
-
 
 const selectedCategory = ref(""); // 分類篩選
 const selectedSort = ref("price"); // 排序依據預設為價格
@@ -88,8 +103,8 @@ const onCategoryChange = () => {
 const fetchProducts = () => {
   const params = {
     category: selectedCategory.value || undefined,
-    sort: selectedSort.value || 'created_date', // 排序依據
-    order: selectedOrder.value || 'DESC', // 排序方式
+    sort: selectedSort.value || "created_date", // 排序依據
+    order: selectedOrder.value || "DESC", // 排序方式
     pageNum: page.value,
     pageSize: pageSize.value,
   };
@@ -118,8 +133,8 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.page-container{
-  margin:50px 0;
+.page-container {
+  margin: 50px 0;
 }
 /* 分類篩選和排序 */
 .sort-options {
@@ -127,6 +142,7 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
+  
 }
 .sort-center {
   display: flex;
@@ -138,9 +154,11 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
+
 }
 .sort-item label {
-  margin-bottom: 5px;
+  margin-bottom: 10px;
+  
 }
 
 /* 商品容器 */
@@ -172,12 +190,13 @@ onMounted(() => {
   padding: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease-in-out;
+  text-decoration: none; /* 移除底線 */
 }
+
 
 .product-card:hover {
   transform: translateY(-5px);
 }
-
 
 /* 商品圖片 */
 .product-image {
@@ -187,7 +206,6 @@ onMounted(() => {
   margin-bottom: 10px;
 }
 
-
 /* 商品詳情 */
 .product-details {
   display: flex;
@@ -196,14 +214,17 @@ onMounted(() => {
 }
 
 .product-title {
+  margin: 10px 0;
   font-size: 16px;
+  color:slategray;
   font-weight: bold;
   margin-bottom: 5px;
 }
 
 .product-price {
   font-size: 14px;
-  color: #333;
+  color:orangered;
+  font-weight: bold;
   margin-bottom: 10px;
 }
 
@@ -213,11 +234,10 @@ onMounted(() => {
   margin: 5px 0;
 }
 
-
 /* 商品描述 */
 .product-description {
-  font-size: 14px;
-  color: #666;
+  font-size: 16px;
+  color: #888;
   margin-bottom: 10px;
 }
 
@@ -231,10 +251,11 @@ onMounted(() => {
   cursor: pointer;
   transition: background-color 0.3s ease;
   margin-top: auto;
+  margin-bottom: 10px;
 }
 
 .add-to-cart:hover {
-  background-color: #5a431e;
+  background-color: #a07b47;
 }
 
 /* 分頁功能 */
@@ -243,6 +264,21 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 16px;
+  font-size: 16px;
+  
 }
+.pagination button{
+  border-radius: 10%;
+  font-size: 16px;
+  padding: 8px;
+  border: 2px solid hsl(210, 50%, 85%);
+  cursor: pointer;
+}
+
+.pagination button:hover{
+  border: 2px solid hsl(210, 85%, 75%);
+  
+}
+
 </style>
