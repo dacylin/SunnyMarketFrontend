@@ -7,6 +7,7 @@ import ProductDetail from '@/views/ProductDetail.vue';
 import ProductPage from '@/views/ProductPage.vue';
 import Login from '@/views/Login.vue';
 import Layout from '@/views/Layout.vue';
+import Register from '@/views/Register.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL), // 定義路由歷史模式
@@ -35,6 +36,11 @@ const router = createRouter({
       path: '/user/Login',
       name: 'Login',
       component: Login 
+    },
+    {
+      path: '/user/Register',
+      name: 'Register',
+      component: Register 
     },
     {
       path: '/user/Layout',
