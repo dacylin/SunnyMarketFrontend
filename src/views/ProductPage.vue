@@ -87,7 +87,7 @@ import TopButton from "@/components/TopButton.vue"; //引入 TopButton 元件
 
 const selectedCategory = ref(""); // 分類篩選
 const selectedSort = ref("price"); // 排序依據預設為價格
-const selectedOrder = ref("DESC"); // 排序方式
+const selectedOrder = ref("ASC"); // 排序方式
 const products = ref([]); // 商品列表
 const page = ref(1); // 當前頁數
 const pageSize = ref(6); // 每頁商品數
@@ -104,7 +104,7 @@ const fetchProducts = () => {
   const params = {
     category: selectedCategory.value || undefined,
     sort: selectedSort.value || "created_date", // 排序依據
-    order: selectedOrder.value || "DESC", // 排序方式
+    order: selectedOrder.value || "ASC", // 排序方式
     pageNum: page.value,
     pageSize: pageSize.value,
   };
