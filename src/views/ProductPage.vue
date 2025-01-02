@@ -320,10 +320,5 @@ onMounted(() => {
   border: 2px solid hsl(210, 85%, 75%);
   
 }
-
-
-
-
-
-
 </style>
+

@@ -15,6 +15,7 @@ import HomeIntro from "./HomeIntro.vue";// 引入 HomeIntro 元件
 import Footer from "@/components/Footer.vue"; // 引入 Footer 元件
 import TopButton from "@/components/TopButton.vue"; //引入 TopButton 元件
 
+
 </script>
 
 <style scoped>

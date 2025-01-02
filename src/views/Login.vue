@@ -27,6 +27,7 @@
         <div class="forgotpassword">忘記密碼?</div>
         <div class="form-actions">
           <button type="submit">登入</button>
+          {{ message }}
         </div>
       </form>
     </div>
@@ -52,17 +53,18 @@ const loginFrom = ref({
 });
 const tokenStore = useTokenStore();
 const router = useRouter();
+const message = ref("");
 
 const getLogin = async () => {
-  let { data } = await api.post("/user/login", loginFrom.value);
-  if (data.code === 200) {
-    tokenStore.token = data.data;
-    router.replace({ name: "layout" });
+  let { data } = await api.post("/api/user/login", loginFrom.value);
+  if (data !== null) {
+    message.value = data.message
+    tokenStore.token = data.token;
+    router.push("/")
   } else {
-    alert("登入失败");
+    message.value = data.message;
   }
 };
-
 </script>
 
 <style scoped>
@@ -81,8 +83,11 @@ const getLogin = async () => {
 }
 
 .background {
-  background-color: rgb(230, 230, 230);
-  height: 100vh;
+
+  background-color: #f6f1eb;
+  height: 80vh;
+}
+
   display: flex;
   justify-content: center;
   gap: 100px;
