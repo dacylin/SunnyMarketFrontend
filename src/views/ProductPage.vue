@@ -5,9 +5,9 @@
     <div class="sort-options">
       <div class="sort-center">
         <!-- 搜尋欄位 -->
-        <div>
+        <div class="search-box">
           <input type="text" v-model="search">
-          <button @click="searchBtn">搜尋</button>
+          <button class="searchBtn" @click="searchBtn">產品搜尋</button>
         </div>
         <!-- 分類篩選 -->
         <div class="sort-item">
@@ -154,15 +154,17 @@ onMounted(() => {
 .sort-options {
   margin-bottom: 20px;
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
+
   
 }
 .sort-center {
   display: flex;
   gap: 30px;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
+  
 }
 .sort-item {
   display: flex;
@@ -172,6 +174,30 @@ onMounted(() => {
 }
 .sort-item label {
   margin-bottom: 10px;
+  
+}
+/* 搜尋欄位 */
+.search-box{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap:20px;
+  font-size:20px;
+
+}
+
+.searchBtn{
+  border: none;
+  width:150px;
+  padding:12px;
+  border-radius: 5px;
+  font-size: 16px;
+  background-color: darkgray;
+  
+}
+
+.searchBtn:hover{
+  background-color: lightgray;
   
 }
 

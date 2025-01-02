@@ -27,12 +27,12 @@ const router = useRouter();
 const Logout = async () => {
     let { data } = await api.get("/user/logout");
     if (data.data.code === 200) {
-        alert('退出成功');
+        alert('登出成功');
         // 清除token
         useTokenStore().removeToken();
         router.replace({ name: 'login' });
     } else {
-        alert('退出失败');
+        alert('登出失敗');
     }
 };
 
@@ -51,7 +51,7 @@ const getUserInfo = async () => {
 
 .header {
     height: 100px;
-    background-color: #fff;
+    background-color: rgb(230, 230, 230);
     display: flex;
     justify-content: space-between;
     padding: 10px;
