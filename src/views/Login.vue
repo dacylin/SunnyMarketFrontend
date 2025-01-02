@@ -83,11 +83,8 @@ const getLogin = async () => {
 }
 
 .background {
-
   background-color: #f6f1eb;
   height: 80vh;
-}
-
   display: flex;
   justify-content: center;
   gap: 100px;
