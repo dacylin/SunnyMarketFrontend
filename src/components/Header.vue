@@ -103,7 +103,6 @@ li:hover::after {
 }
 /* 調整icon區 */
 .features{
-  background-color:lavender; 
   display: flex;
   flex-direction: row;
   align-items: center;
