@@ -192,12 +192,12 @@ onMounted(() => {
   padding:12px;
   border-radius: 5px;
   font-size: 16px;
-  background-color: darkgray;
+  background-color: lightgray;
   
 }
 
 .searchBtn:hover{
-  background-color: lightgray;
+  background-color:rgb(200, 200, 200, 0.5);
   
 }
 
