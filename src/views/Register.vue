@@ -1,7 +1,7 @@
 <template>
   <Header />
   <div class="register-title">會員註冊</div>
-  <div class="shit">
+  <div class="router-text">
     <router-link to="/"
       class="homepage"><span>首頁</span></router-link><span>&nbsp&nbsp&nbsp&nbsp&nbsp>&nbsp&nbsp&nbsp&nbsp&nbsp</span><span>建立帳戶</span>
   </div>
@@ -84,7 +84,7 @@ const registerAdd = async () => {
   background-color: rgb(230, 230, 230);
 }
 
-.shit {
+.router-text {
   background-color:rgb(230, 230, 230);
   display: flex;
   justify-content: center;
