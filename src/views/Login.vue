@@ -1,6 +1,6 @@
 <template>
 <Header />
-  <div class="login-title">登入</div>
+  <div class="login-title">會員登入</div>
   <div class="shit"><router-link to="/" class="homepage"><span>首頁</span></router-link><span>&nbsp&nbsp&nbsp&nbsp&nbsp>&nbsp&nbsp&nbsp&nbsp&nbsp</span><span>帳戶</span></div>
   <div class="background">
     <div class="login-box">
@@ -73,18 +73,21 @@ const getLogin = async () => {
   justify-content: center;
   font-size: 28px;
   padding: 20px;
-  background-color: #f6f1eb;
+  background-color: rgb(230, 230, 230);
 }
 
 .shit {
-    background-color: #f6f1eb;
+    background-color: rgb(230, 230, 230);
     display: flex;
     justify-content: center;
 }
 
 .background {
+
   background-color: #f6f1eb;
   height: 80vh;
+}
+
   display: flex;
   justify-content: center;
   gap: 100px;

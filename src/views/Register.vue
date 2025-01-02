@@ -35,7 +35,7 @@
             <button type="submit">會員註冊</button>
           </div>
         </form>
-        <router-link to = "/user/login" class="loginurl"><button class="login-button">登入</button></router-link>
+        <router-link to = "/user/login" class="loginurl"><button class="login-button">回登入頁</button></router-link>
       </div>
     </div>
   </div>
@@ -81,17 +81,17 @@ const registerAdd = async () => {
   justify-content: center;
   font-size: 28px;
   padding: 20px;
-  background-color: #f6f1eb;
+  background-color: rgb(230, 230, 230);
 }
 
 .shit {
-  background-color: #f6f1eb;
+  background-color:rgb(230, 230, 230);
   display: flex;
   justify-content: center;
 }
 
 .background {
-  background-color: #f6f1eb;
+  background-color: rgb(230, 230, 230);
   height: auto;
   display: flex;
   justify-content: center;

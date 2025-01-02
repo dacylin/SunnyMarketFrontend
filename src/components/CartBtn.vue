@@ -37,7 +37,7 @@
 }
 
 .cartsvg {
-  fill: gray; /*控制 svg檔案 顏色 */
+  fill: darkgrey; /*控制 svg檔案 顏色 */
   width: 2em;
   height: 2em;
 }

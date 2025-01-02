@@ -4,6 +4,11 @@
     <!-- 分類篩選和排序 -->
     <div class="sort-options">
       <div class="sort-center">
+        <!-- 搜尋欄位 -->
+        <div class="search-box">
+          <input type="text" v-model="search">
+          <button class="searchBtn" @click="searchBtn">產品搜尋</button>
+        </div>
         <!-- 分類篩選 -->
         <div class="sort-item">
           <label for="category-select">分類篩選</label>
@@ -93,7 +98,13 @@ const products = ref([]); // 商品列表
 const page = ref(1); // 當前頁數
 const pageSize = ref(6); // 每頁商品數
 const totalPages = ref(0); // 總頁數
+const search = ref("");
 
+// 搜尋
+const searchBtn = () => {
+  page.value = 1; // 搜尋時重置頁數為 1
+  fetchProducts(); // 重新載入商品資料
+};
 // 當分類篩選變更時，將頁數重置為 1 並重新獲取商品
 const onCategoryChange = () => {
   page.value = 1; // 當分類變更時，跳回第一頁
@@ -108,7 +119,9 @@ const fetchProducts = () => {
     order: selectedOrder.value || "ASC", // 排序方式
     pageNum: page.value,
     pageSize: pageSize.value,
+    search: search.value || undefined
   };
+ 
 
   axios
     .get("http://localhost:8080/api/products/getAllProducts", { params }) // 串接原本的 API
@@ -141,15 +154,17 @@ onMounted(() => {
 .sort-options {
   margin-bottom: 20px;
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
+
   
 }
 .sort-center {
   display: flex;
   gap: 30px;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
+  
 }
 .sort-item {
   display: flex;
@@ -159,6 +174,30 @@ onMounted(() => {
 }
 .sort-item label {
   margin-bottom: 10px;
+  
+}
+/* 搜尋欄位 */
+.search-box{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap:20px;
+  font-size:20px;
+
+}
+
+.searchBtn{
+  border: none;
+  width:150px;
+  padding:12px;
+  border-radius: 5px;
+  font-size: 16px;
+  background-color: darkgray;
+  
+}
+
+.searchBtn:hover{
+  background-color: lightgray;
   
 }
 
@@ -281,5 +320,5 @@ onMounted(() => {
   border: 2px solid hsl(210, 85%, 75%);
   
 }
-
 </style>
+
