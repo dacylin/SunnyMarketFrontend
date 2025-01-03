@@ -59,14 +59,14 @@ header {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
-  gap:30px;
+  justify-content: center;
+  
 }
 
 .nav li {
   list-style: none; /* 去除圓點 */
   margin: 0 30px;
-  font-size: 1em;
+  font-size:  20px;
 }
 
 /*以下 設定浮出文字下底線 */
@@ -74,9 +74,9 @@ header {
   color: grey;
   text-decoration: none;
   font-weight: bold;
-  letter-spacing: 2px;
+  letter-spacing: 5px;
   cursor: pointer;
-  font-size: 1em;
+  font-size: 20px;
 }
 
 li {
@@ -87,7 +87,7 @@ li::after {
   content: "";
   background-color: #ff8000; /*橘色*/
   position: absolute;
-  bottom: -15px;
+  bottom: -20px;
   height: 3px;
   width: 100%;
   left: 0;
@@ -97,13 +97,12 @@ li::after {
 }
 
 li:hover::after {
-  bottom: -5px;
+  bottom: -7px;
   opacity: 0.75;
   transition: all cubic-bezier(0, 0.9, 0.6, 0.9) 1s;
 }
 /* 調整icon區 */
 .features{
-  background-color:lavender; 
   display: flex;
   flex-direction: row;
   align-items: center;

@@ -39,14 +39,12 @@
 
 
 .usersvg {
-  fill: grey; /*控制 svg檔案 顏色 */
+  fill: darkgrey; /*控制 svg檔案 顏色 */
   width: 2em;
   height: 2em;
   cursor: pointer;
 }
-.usersvg:hover {
-  fill: orange;
-}
+
 p{
   margin-left:10px;
   color: grey;
@@ -55,5 +53,13 @@ p{
   letter-spacing: 2px;
   cursor: pointer;
   font-size: 1em;
+}
+.router-link, a {
+  text-decoration: none; /* 移除下劃線 */
+}
+
+.userbtn a:hover p{
+  color:orange;
+
 }
 </style>

@@ -1,9 +1,12 @@
 import axios from "axios";
 import useTokenStore from '@/stores/TokenCheck'
+import { ref } from 'vue'
+
+const message = ref('');
 
 // 先建一个api
 const api = axios.create({
-    baseURL: "http://localhost:8888",
+    baseURL: "http://localhost:8080",
     timeout: 5000
 });
 // Request 前檢查 token檢查 token
@@ -13,13 +16,10 @@ api.interceptors.request.use(
         if (useToken.token) {
             console.log("Header toekn：", useToken.token);
             // Request Header
-            config.headers.token = useToken.token;
-        }
+            config.headers.Authorization = `Bearer ${useToken.token}`;        }
         return config;
-
     },
     error => {
-
         return Promise.reject(error);
     }
 )
@@ -28,11 +28,11 @@ api.interceptors.request.use(
 api.interceptors.response.use(
     response => {
         console.log("Response數據：", response);
-        if (response.data.code != 200) {
-            ElMessage.error(response.data.message);
+        if (response.data != null) {
+            message.value = response.data.message;
         }
 
-        return response;
+        return response.data;
     },
     error => {
         return Promise.reject(error);

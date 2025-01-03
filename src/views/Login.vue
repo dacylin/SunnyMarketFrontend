@@ -1,9 +1,14 @@
 <template>
-<Header />
-  <div class="login-title">登入</div>
-  <div class="shit"><router-link to="/" class="homepage"><span>首頁</span></router-link><span>&nbsp&nbsp&nbsp&nbsp&nbsp>&nbsp&nbsp&nbsp&nbsp&nbsp</span><span>帳戶</span></div>
+  <Header />
+  <div class="login-title">會員登入</div>
+  <div class="router-text">
+    <router-link to="/" class="homepage"><span>首頁</span></router-link
+    ><span>&nbsp&nbsp&nbsp&nbsp&nbsp>&nbsp&nbsp&nbsp&nbsp&nbsp</span
+    ><span>帳戶</span>
+  </div>
   <div class="background">
     <div class="login-box">
+      <p class="loginMessage">{{ message}}</p>
       <div class="login-label">登入</div>
       <form @submit.prevent="getLogin">
         <div class="form-item">
@@ -28,11 +33,18 @@
         <div class="form-actions">
           <button type="submit">登入</button>
         </div>
+        <div class="google-login">
+          <button @click="googleLogin" class="  google-login-button">
+            使用 Google 登入
+          </button>
+        </div>
       </form>
     </div>
     <div class="register-box">
       <div class="register-label">新會員</div>
-      <router-link to = "/user/register" class="registerurl"><div class="register-button">會員註冊</div></router-link>
+      <router-link to="/user/register" class="registerurl"
+        ><div class="register-button">會員註冊</div></router-link
+      >
     </div>
   </div>
   <Footer />
@@ -43,26 +55,56 @@ import { ref, onMounted, reactive } from "vue";
 import { useRouter } from "vue-router";
 import useTokenStore from "@/stores/TokenCheck.js";
 import api from "@/utils/Request.js";
-import Header from "@/components/Header.vue"; // 引入 Header 元件
-import Footer from "@/components/Footer.vue"; // 引入 Footer 元件
+import Header from "@/components/Header.vue";
+import Footer from "@/components/Footer.vue";
+
+const message = ref("");
 
 const loginFrom = ref({
   email: "",
   password: "",
 });
+
 const tokenStore = useTokenStore();
 const router = useRouter();
 
 const getLogin = async () => {
-  let { data } = await api.post("/user/login", loginFrom.value);
-  if (data.code === 200) {
-    tokenStore.token = data.data;
-    router.replace({ name: "layout" });
+
+  const loginResponse = await api.post("/api/user/login", loginFrom.value);
+  if (loginResponse !== null) {
+    message.value = loginResponse.message
+    console.log("登入成功後的 message:", message.value); // 確認值是否正確
+    tokenStore.token = loginResponse.token;
+      // 延遲 3 秒後跳轉首頁
+      setTimeout(() => {
+        router.push("/");
+      }, 3000);
+  let { data } = await api.post("/api/user/login", loginFrom.value);
+  if (data !== null) {
+    message.value = data.message;
+    tokenStore.token = data.token;
+    router.push("/");
   } else {
-    alert("登入失败");
+    message.value = loginResponse.message;
   }
+}
 };
 
+const googleLogin = async () => {
+  try {
+    // 使用 Google OAuth 進行驗證（需要提前設定 Google 登入的相關憑證）
+    const { data } = await api.get("/api/user/google-login");
+    if (data.token) {
+      tokenStore.token = data.token;
+      router.push("/");
+    } else {
+      message.value = "Google 登入失敗，請再試一次。";
+    }
+  } catch (error) {
+    console.error("Google 登入失敗:", error);
+    message.value = "Google 登入失敗，請稍後再試。";
+  }
+};
 </script>
 
 <style scoped>
@@ -71,18 +113,18 @@ const getLogin = async () => {
   justify-content: center;
   font-size: 28px;
   padding: 20px;
-  background-color: #f6f1eb;
+  background-color: rgb(230, 230, 230);
 }
 
-.shit {
-    background-color: #f6f1eb;
-    display: flex;
-    justify-content: center;
+.router-text {
+  background-color: rgb(230, 230, 230);
+  display: flex;
+  justify-content: center;
 }
 
 .background {
-  background-color: #f6f1eb;
-  height: 100vh;
+  background-color: rgb(230, 230, 230);
+  height: 80vh;
   display: flex;
   justify-content: center;
   gap: 100px;
@@ -175,7 +217,35 @@ const getLogin = async () => {
 
 .registerurl,
 .homepage {
-    text-decoration: none;
-    color:inherit;
+  text-decoration: none;
+  color: inherit;
+}
+
+.google-login {
+  margin-top: 20px;
+}
+
+.google-login-button {
+  padding: 12px;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  width: 100%;
+  background-color: #4285f4;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.google-login-button:hover {
+  background-color: #357ae8;
+}
+
+.loginMessage{
+  color:orangered;
+  text-align: center;
+  
 }
 </style>

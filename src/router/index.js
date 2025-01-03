@@ -2,12 +2,15 @@
 
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '@/views/Home/Home.vue';
-import AboutUs from '@/views/AboutUs.vue';
+// import AboutUs from '@/views/AboutUs.vue';
 import ProductDetail from '@/views/ProductDetail.vue';
 import ProductPage from '@/views/ProductPage.vue';
 import Login from '@/views/Login.vue';
 import Layout from '@/views/Layout.vue';
 import Register from '@/views/Register.vue';
+import AdminBackend from "@/views/Admin/AdminBackend.vue";
+import UserTableList from "@/components/UserTableList.vue";
+import ProductTableList from "@/components/ProductTableList.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL), // 定義路由歷史模式
@@ -16,11 +19,6 @@ const router = createRouter({
       path: '/',
       name: 'Home',
       component: Home  // 首頁路由
-    },
-    {
-      path: '/aboutus',
-      name: 'AboutUs',
-      component: AboutUs // 關於我們
     },
     {
       path: '/products',
@@ -46,7 +44,27 @@ const router = createRouter({
       path: '/user/Layout',
       name: 'Layout',
       component: Layout 
-    }
+    },
+// 0102添加後台路由
+    {
+      path: "/adminbackend",
+      name: "adminbackend",
+      component: AdminBackend,
+      children: [
+          {
+              path: "usertablelist",
+              name: "UserTableList",
+              component: UserTableList,
+          },
+          {
+              path: "producttablelist",
+              name: "ProductTableList",
+              component: ProductTableList,
+          },
+      ],
+  },
+
+
   ]
 
 });
