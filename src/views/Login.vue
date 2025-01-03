@@ -4,6 +4,7 @@
   <div class="router-text"><router-link to="/" class="homepage"><span>首頁</span></router-link><span>&nbsp&nbsp&nbsp&nbsp&nbsp>&nbsp&nbsp&nbsp&nbsp&nbsp</span><span>帳戶</span></div>
   <div class="background">
     <div class="login-box">
+      <p class="loginMessage">{{ message}}</p>
       <div class="login-label">登入</div>
       <form @submit.prevent="getLogin">
         <div class="form-item">
@@ -27,8 +28,8 @@
         <div class="forgotpassword">忘記密碼?</div>
         <div class="form-actions">
           <button type="submit">登入</button>
-          {{ message }}
         </div>
+        
       </form>
     </div>
     <div class="register-box">
@@ -47,22 +48,27 @@ import api from "@/utils/Request.js";
 import Header from "@/components/Header.vue"; // 引入 Header 元件
 import Footer from "@/components/Footer.vue"; // 引入 Footer 元件
 
+const message = ref("");
+
 const loginFrom = ref({
   email: "",
   password: "",
 });
 const tokenStore = useTokenStore();
 const router = useRouter();
-const message = ref("");
 
 const getLogin = async () => {
-  let { data } = await api.post("/api/user/login", loginFrom.value);
-  if (data !== null) {
-    message.value = data.message
-    tokenStore.token = data.token;
-    router.push("/")
+  const loginResponse = await api.post("/api/user/login", loginFrom.value);
+  if (loginResponse !== null) {
+    message.value = loginResponse.message
+    console.log("登入成功後的 message:", message.value); // 確認值是否正確
+    tokenStore.token = loginResponse.token;
+      // 延遲 3 秒後跳轉首頁
+      setTimeout(() => {
+        router.push("/");
+      }, 3000);
   } else {
-    message.value = data.message;
+    message.value = loginResponse.message;
   }
 };
 </script>
@@ -179,5 +185,11 @@ const getLogin = async () => {
 .homepage {
     text-decoration: none;
     color:inherit;
+}
+
+.loginMessage{
+  color:orangered;
+  text-align: center;
+  
 }
 </style>
