@@ -66,9 +66,12 @@ const tokenStore = useTokenStore();
 const router = useRouter();
 
 const registerAdd = async () => {
-  let { data } = await api.post("/user/register", registerForm.value);
-  if (data.code === 200) {
+  let { data } = await api.post("/api/user/register", registerForm.value);
+  if (data !== null) {
     isRegister.value = false;
+    setTimeout(() => {
+        router.push("/user/Login");
+      }, 3000);
   } else {
     alert("註冊失败");
   }
