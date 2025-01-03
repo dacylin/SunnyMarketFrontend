@@ -1,7 +1,11 @@
 <template>
-<Header />
+  <Header />
   <div class="login-title">會員登入</div>
-  <div class="router-text"><router-link to="/" class="homepage"><span>首頁</span></router-link><span>&nbsp&nbsp&nbsp&nbsp&nbsp>&nbsp&nbsp&nbsp&nbsp&nbsp</span><span>帳戶</span></div>
+  <div class="router-text">
+    <router-link to="/" class="homepage"><span>首頁</span></router-link
+    ><span>&nbsp&nbsp&nbsp&nbsp&nbsp>&nbsp&nbsp&nbsp&nbsp&nbsp</span
+    ><span>帳戶</span>
+  </div>
   <div class="background">
     <div class="login-box">
       <p class="loginMessage">{{ message}}</p>
@@ -29,12 +33,18 @@
         <div class="form-actions">
           <button type="submit">登入</button>
         </div>
-        
+        <div class="google-login">
+          <button @click="googleLogin" class="  google-login-button">
+            使用 Google 登入
+          </button>
+        </div>
       </form>
     </div>
     <div class="register-box">
       <div class="register-label">新會員</div>
-      <router-link to = "/user/register" class="registerurl"><div class="register-button">會員註冊</div></router-link>
+      <router-link to="/user/register" class="registerurl"
+        ><div class="register-button">會員註冊</div></router-link
+      >
     </div>
   </div>
   <Footer />
@@ -45,8 +55,8 @@ import { ref, onMounted, reactive } from "vue";
 import { useRouter } from "vue-router";
 import useTokenStore from "@/stores/TokenCheck.js";
 import api from "@/utils/Request.js";
-import Header from "@/components/Header.vue"; // 引入 Header 元件
-import Footer from "@/components/Footer.vue"; // 引入 Footer 元件
+import Header from "@/components/Header.vue";
+import Footer from "@/components/Footer.vue";
 
 const message = ref("");
 
@@ -54,10 +64,12 @@ const loginFrom = ref({
   email: "",
   password: "",
 });
+
 const tokenStore = useTokenStore();
 const router = useRouter();
 
 const getLogin = async () => {
+
   const loginResponse = await api.post("/api/user/login", loginFrom.value);
   if (loginResponse !== null) {
     message.value = loginResponse.message
@@ -67,8 +79,30 @@ const getLogin = async () => {
       setTimeout(() => {
         router.push("/");
       }, 3000);
+  let { data } = await api.post("/api/user/login", loginFrom.value);
+  if (data !== null) {
+    message.value = data.message;
+    tokenStore.token = data.token;
+    router.push("/");
   } else {
     message.value = loginResponse.message;
+  }
+}
+};
+
+const googleLogin = async () => {
+  try {
+    // 使用 Google OAuth 進行驗證（需要提前設定 Google 登入的相關憑證）
+    const { data } = await api.get("/api/user/google-login");
+    if (data.token) {
+      tokenStore.token = data.token;
+      router.push("/");
+    } else {
+      message.value = "Google 登入失敗，請再試一次。";
+    }
+  } catch (error) {
+    console.error("Google 登入失敗:", error);
+    message.value = "Google 登入失敗，請稍後再試。";
   }
 };
 </script>
@@ -83,9 +117,9 @@ const getLogin = async () => {
 }
 
 .router-text {
-    background-color: rgb(230, 230, 230);
-    display: flex;
-    justify-content: center;
+  background-color: rgb(230, 230, 230);
+  display: flex;
+  justify-content: center;
 }
 
 .background {
@@ -183,8 +217,30 @@ const getLogin = async () => {
 
 .registerurl,
 .homepage {
-    text-decoration: none;
-    color:inherit;
+  text-decoration: none;
+  color: inherit;
+}
+
+.google-login {
+  margin-top: 20px;
+}
+
+.google-login-button {
+  padding: 12px;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  width: 100%;
+  background-color: #4285f4;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.google-login-button:hover {
+  background-color: #357ae8;
 }
 
 .loginMessage{
