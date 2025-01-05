@@ -2,7 +2,7 @@
 <template>
     <div class="sidebar">
         <div class="header_container">
-            <img class="logo" src="../assets/sunnymarket_nobg.png" alt="Logo" />
+            <img class="logo" src="@/assets/sunnymarket_nobg.png" alt="Logo" />
             <div class="headertext">
                 <span class="headertext1"></span>
                 <span class="headertext2">後台管理</span>
