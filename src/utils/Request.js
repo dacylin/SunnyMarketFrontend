@@ -8,35 +8,21 @@ const message = ref('');
 const api = axios.create({
     baseURL: "http://localhost:8080",
 });
+
 // Request 前檢查 token檢查 token
-api.interceptors.request.use(
-    config => {
-        const useToken = useTokenStore();
-        if (useToken.token) {
-            console.log("Header toekn：", useToken.token);
-            // Request Header
-            config.headers.Authorization = `Bearer ${useToken.token}`;        
-        }
-        return config;
-    },
-    error => {
-        return Promise.reject(error);
-    }
-)
-
-// Response 
-api.interceptors.response.use(
-    response => {
-        console.log("Response數據：", response);
-        if (response.data != null) {
-            message.value = response.data.message;
-        }
-
-        return response.data;
-    },
-    error => {
-        return Promise.reject(error);
-    }
-)
+// api.interceptors.request.use(
+//     config => {
+//         const useToken = useTokenStore();
+//         if (useToken.token) {
+//             console.log("Header toekn：", useToken.token);
+//             // Request Header
+//             config.headers.Authorization = `Bearer ${useToken.token}`;        
+//         }
+//         return config;
+//     },
+//     error => {
+//         return Promise.reject(error);
+//     }
+// )
 
 export default api;
