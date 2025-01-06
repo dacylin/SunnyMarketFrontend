@@ -54,6 +54,7 @@
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import useTokenStore from "@/stores/TokenCheck.js";
+import TokenStore from "@/utils/TokenStore"; // 引入 TokenStore
 import api from "@/utils/Request.js";
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
@@ -69,7 +70,7 @@ const tokenStore = useTokenStore();
 const router = useRouter();
 
 const getLogin = async () => {
-  const response  = await api.post("/api/user/login", loginFrom.value);
+  const response = await api.post("/api/user/login", loginFrom.value);
   console.log("修好的 response:", response);
   if (response.data) {
     console.log("這是 response.data:", response.data);
@@ -79,9 +80,9 @@ const getLogin = async () => {
     tokenStore.token = response.data.token;
     console.log("獲取的 token:", tokenStore.token);
 
-    // 使用 localStorage 存儲 token（如果希望頁面刷新後仍能保留登入狀態）
-    localStorage.setItem("token", response.data.token); 
-    console.log("是否設進token：" + localStorage.getItem("token"));
+    //設置 token 在 TokenStore
+    TokenStore.setToken(response.data.token);
+    console.log("TokenStore 獲取的 token:", TokenStore.getToken());
 
     // 延遲 3 秒後跳轉首頁
     setTimeout(() => {
