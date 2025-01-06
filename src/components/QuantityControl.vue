@@ -1,9 +1,13 @@
 <template>
   <div class="numbtn">
+    <!--  控制數量按鈕 -->
     <button @click="decrease" class="quantity-btn">—</button>
     <span class="quantity">{{ modelValue }}</span>
     <button @click="increase" class="quantity-btn">＋</button>
+     <!-- 加入購物車按鈕 -->
+    <button class="cartbtn">加入購物車</button>
   </div>
+
 </template>
 
 <script setup>
