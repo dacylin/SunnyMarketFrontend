@@ -66,7 +66,7 @@ header {
 .nav li {
   list-style: none; /* 去除圓點 */
   margin: 0 30px;
-  font-size:  20px;
+  font-size: 1em;
 }
 
 /*以下 設定浮出文字下底線 */
@@ -76,7 +76,7 @@ header {
   font-weight: bold;
   letter-spacing: 5px;
   cursor: pointer;
-  font-size: 20px;
+  font-size: 1em;
 }
 
 li {

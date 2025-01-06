@@ -6,7 +6,6 @@
                 <img class="logo" src="@/assets/sunnymarket_nobg.png" alt="Logo" />
             </router-link>
             <div class="headertext">
-                <span class="headertext1"></span>
                 <span class="headertext2">後台管理</span>
             </div>
         </div>
@@ -14,6 +13,7 @@
             <ul class="navlist">
                 <li :class="{ active: activeIndex === 0 }" @click="setActive(0, usertablelist)">使用者管理列表</li>
                 <li :class="{ active: activeIndex === 1 }" @click="setActive(1, producttablelist)">商品管理列表</li>
+                <li :class="{ active: activeIndex === 2 }" @click="setActive(2, ordertablelist)">會員訂單總表(已接到後端)</li>
                 <li class="logoutButton" @click="logout">登出</li>
             </ul>
         </div>
@@ -31,6 +31,7 @@ const route = useRoute();
 
 const usertablelist = '/adminbackend/usertablelist';
 const producttablelist = '/adminbackend/producttablelist';
+const ordertablelist = '/adminbackend/ordertablelist';
 
 // 根據路由初始化 activeIndex
 const setInitialActiveIndex = () => {
@@ -39,6 +40,8 @@ const setInitialActiveIndex = () => {
         activeIndex.value = 0;
     } else if (path.includes('/adminbackend/producttablelist')) {
         activeIndex.value = 1;
+    }else if (path.includes('/adminbackend/ordertablelist')) {
+        activeIndex.value = 2;
     }
 };
 
@@ -85,13 +88,8 @@ onMounted(() => {
     color:gray;
 }
 
-.headertext1 {
-    font-size: 16px;
-   
-}
-
 .headertext2 {
-    font-size: 16px;
+    font-size: 20px;
     
 }
 
@@ -141,7 +139,7 @@ onMounted(() => {
     height: 2px;
     bottom: 0;
     left: 0;
-    background-color: black;
+    background-color: darkgray;
     transition: width 0.5s ease;
 }
 </style>
