@@ -69,11 +69,20 @@ const tokenStore = useTokenStore();
 const router = useRouter();
 
 const getLogin = async () => {
-  const loginResponse = await api.post("/api/user/login", loginFrom.value);
-  if (loginResponse !== null) {
-    message.value = loginResponse.message;
+  const response  = await api.post("/api/user/login", loginFrom.value);
+  console.log("修好的 response:", response);
+  if (response.data) {
+    console.log("這是 response.data:", response.data);
+    // 提取訊息和 Token
+    message.value = response.data.message;
     console.log("登入成功後的 message:", message.value); // 確認值是否正確
-    tokenStore.token = loginResponse.token;
+    tokenStore.token = response.data.token;
+    console.log("獲取的 token:", tokenStore.token);
+
+    // 使用 localStorage 存儲 token（如果希望頁面刷新後仍能保留登入狀態）
+    localStorage.setItem("token", response.data.token); 
+    console.log("是否設進token：" + localStorage.getItem("token"));
+
     // 延遲 3 秒後跳轉首頁
     setTimeout(() => {
       router.push("/");
