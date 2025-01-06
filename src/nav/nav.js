@@ -7,6 +7,12 @@ const navData = [
     link: "ProductPage", //要跟index.js 的 name 相同
     active: true,
   },
+  {
+    id: 2,
+    name: "AI客服",
+    link: "AIService", //要跟index.js 的 name 相同
+    active: true,
+  },
 
 ];
 
