@@ -8,7 +8,7 @@
   </div>
   <div class="background">
     <div class="login-box">
-      <p class="loginMessage">{{ message}}</p>
+      <p class="loginMessage">{{ message }}</p>
       <div class="login-label">登入</div>
       <form @submit.prevent="getLogin">
         <div class="form-item">
@@ -34,7 +34,7 @@
           <button type="submit">登入</button>
         </div>
         <div class="google-login">
-          <button @click="googleLogin" class="  google-login-button">
+          <button @click="googleLogin" class="google-login-button">
             使用 Google 登入
           </button>
         </div>
@@ -51,7 +51,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, reactive } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import useTokenStore from "@/stores/TokenCheck.js";
 import api from "@/utils/Request.js";
@@ -69,34 +69,23 @@ const tokenStore = useTokenStore();
 const router = useRouter();
 
 const getLogin = async () => {
-
   const loginResponse = await api.post("/api/user/login", loginFrom.value);
   if (loginResponse !== null) {
-    message.value = loginResponse.message
+    message.value = loginResponse.message;
     console.log("登入成功後的 message:", message.value); // 確認值是否正確
     tokenStore.token = loginResponse.token;
-      // 延遲 3 秒後跳轉首頁
-      setTimeout(() => {
-        router.push("/");
-      }, 3000);
-  let { data } = await api.post("/api/user/login", loginFrom.value);
-  if (data !== null) {
-    message.value = data.message;
-    tokenStore.token = data.token;
-    router.push("/");
-  } else {
-    message.value = loginResponse.message;
+    // 延遲 3 秒後跳轉首頁
+    setTimeout(() => {
+      router.push("/");
+    }, 3000);
   }
-}
 };
 
 const googleLogin = async () => {
   try {
-    // 使用 Google OAuth 進行驗證（需要提前設定 Google 登入的相關憑證）
-    const { data } = await api.get("/api/user/google-login");
-    if (data.token) {
-      tokenStore.token = data.token;
-      router.push("/");
+    const response = await api.get("/google/buildAuthUrl");
+    if (response !== null) {
+      window.location.href = response.data.authUrl;
     } else {
       message.value = "Google 登入失敗，請再試一次。";
     }
@@ -105,6 +94,35 @@ const googleLogin = async () => {
     message.value = "Google 登入失敗，請稍後再試。";
   }
 };
+
+// 從 URL 中提取 code 並傳送到後端
+const handleGoogleRedirect = async () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const code = urlParams.get("code"); // 從 URL 查詢參數中提取 code
+
+  if (code) {
+    try {
+      const googleLoginRequest = { code };
+      // 將 code 傳送給後端進行進一步處理
+      const response = await api.post(
+        "/google/getGoogleCode",
+        googleLoginRequest
+      );
+      // const accessToken = response.data.access_token;
+      // const userResponse = await api.get(`/google/getGoogleUser?accessToken=${accessToken}`);
+      console.log("Google 用戶資訊:", response.data);
+    } catch (error) {
+      console.error("發送 code 到後端失敗:", error);
+      message.value = "處理登入資訊失敗，請稍後再試。";
+    }
+  } else {
+    message.value = "Google 授權失敗，請重新嘗試。";
+  }
+};
+
+onMounted(() => {
+  handleGoogleRedirect();
+});
 </script>
 
 <style scoped>
@@ -243,9 +261,8 @@ const googleLogin = async () => {
   background-color: #357ae8;
 }
 
-.loginMessage{
-  color:orangered;
+.loginMessage {
+  color: orangered;
   text-align: center;
-  
 }
 </style>
