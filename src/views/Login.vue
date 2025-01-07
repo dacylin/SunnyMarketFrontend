@@ -87,7 +87,7 @@ const getLogin = async () => {
     // 延遲 3 秒後跳轉首頁
     setTimeout(() => {
       router.push("/");
-    }, 3000);
+    }, 1000);
   }
 };
 
