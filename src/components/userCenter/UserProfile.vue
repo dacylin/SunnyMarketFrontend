@@ -111,7 +111,7 @@ const users = ref([
 }
 
 .table thead th {
-  background-color: lightgray;
+  background-color: gold;
   font-weight: bold;
 }
 
@@ -124,7 +124,7 @@ const users = ref([
 .btn {
   padding: 10px;
   margin: 0 4px 0 4px;
-  background-color: lightgray;
+  background-color: gold;
   border-radius: 8px;
   font-size: 16px;
   transition: background-color 0.3s ease;
@@ -219,19 +219,6 @@ const users = ref([
 
   .function {
     min-width: 90px;
-  }
-
-  .paginationButton {
-    padding: 8px 12px;
-    margin: 0px 8px 0px 8px;
-    font-size: 12px;
-    cursor: pointer;
-    background-color: lightgray;
-    border: none;
-  }
-
-  .paginationText {
-    font-size: 12px;
   }
 
   .tableContainer {
