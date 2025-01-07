@@ -1,4 +1,5 @@
-<!-- todo: 先只要顯示 -->
+<!-- todo: 先只要顯示
+@GetMapping("/loginRecord/{userId}") -->
 <template>
   <div class="container">
     <div class="tableContainer">
