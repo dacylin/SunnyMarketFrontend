@@ -14,7 +14,7 @@ if (token) {
   console.log("沒有 token，無法進行請求");
 }
 */
-
+import {jwtDecode} from "jwt-decode";
 
 const TokenStore = {
   // 獲取 token
@@ -29,13 +29,30 @@ const TokenStore = {
   },
   // 設置 token
   setToken(token) {
-    // 將 token 儲存到 localStorage
+    const payload = this.decodeToken(token);
+  
     localStorage.setItem("token", token);
+    const userId = payload.userId;
+    const email = payload.sub;
+    localStorage.setItem("userId", userId);
+    localStorage.setItem("email", email);
   },
+  
 
   // 刪除 token（登出）
   removeToken() {
     localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("email");
+  },
+
+  decodeToken(token) {
+    try {
+      return jwtDecode(token);
+    } catch (error) {
+      console.error("Error decoding token:", error);
+      return null;
+    }
   },
 };
 
