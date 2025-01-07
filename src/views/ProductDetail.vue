@@ -10,9 +10,10 @@
       <span v-if="product.category === 'SEAFOOD'" class="category seafood">
         SEAFOOD
       </span>
-      <span v-else="product.category === 'FOOD'" class="category food">
+      <span v-else class="category food">
         FOOD
       </span>
+      <h2>{{ product.productId }}</h2>
       <h2>{{ product.productName }}</h2>
       <h4>產品介紹</h4>
       <p>{{ product.description }}</p>
