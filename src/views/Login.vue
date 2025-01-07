@@ -72,12 +72,11 @@ const router = useRouter();
 
 const getLogin = async () => {
   const response = await api.post("/api/user/login", loginFrom.value);
-  console.log("修好的 response:", response);
   if (response.data) {
     console.log("這是 response.data:", response.data);
     // 提取訊息和 Token
     message.value = response.data.message;
-    console.log("登入成功後的 message:", message.value); // 確認值是否正確
+    localStorage.setItem("role" , response.data.role);
     tokenStore.token = response.data.token;
     console.log("獲取的 token:", tokenStore.token);
 
@@ -109,7 +108,7 @@ const googleLogin = async () => {
 // 從 URL 中提取 code 並傳送到後端
 const handleGoogleRedirect = async () => {
   const urlParams = new URLSearchParams(window.location.search);
-  const code = urlParams.get("code"); // 從 URL 查詢參數中提取 code
+  const code = urlParams.get("code");
 
   if (code) {
     try {
@@ -120,7 +119,6 @@ const handleGoogleRedirect = async () => {
         googleLoginRequest
       );
       console.log("Google 用戶資訊:", response.data);
-      tokenStore.token = response.data.token;
       TokenStore.setToken(response.data.token);
       setTimeout(() => {
       router.push("/");
@@ -130,7 +128,7 @@ const handleGoogleRedirect = async () => {
       message.value = "處理登入資訊失敗，請稍後再試。";
     }
   } else {
-    message.value = "Google 授權失敗，請重新嘗試。";
+    message.value = "請使用者登入。";
   }
 };
 
