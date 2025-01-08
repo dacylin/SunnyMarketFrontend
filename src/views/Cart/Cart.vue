@@ -5,7 +5,6 @@
       <thead>
         <tr>
           <th>商品圖片</th>
-          <th>商品Id</th>
           <th>商品名稱</th>
           <th>價格</th>
           <th>數量</th>
@@ -18,7 +17,6 @@
           <td>
             <img :src="item.imageUrl" alt="商品圖片" style="width: 100px; height: auto;" />
           </td>
-          <td>{{ item.productId }}</td>  
           <td>{{ item.productName }}</td>        
           <td>${{ item.price }}</td>
           <td>{{ item.quantity }}</td>
@@ -69,9 +67,9 @@ items.value.forEach((item, index) => {
 <style scoped>
 /* 設定購物車容器 */
 .cart-contain {
-  max-width: 800px;
+  max-width: 1000px;
   min-height: 500px;
-  margin: auto;
+  margin: 20px auto;
   padding: 20px;
   border: none;
   border-radius: 5px;
