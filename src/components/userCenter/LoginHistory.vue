@@ -1,195 +1,143 @@
-<!-- todo: 先只要顯示
-@GetMapping("/loginRecord/{userId}") -->
+<!-- todo: 先只要顯示 -->
 <template>
-  <div class="container">
-    <div class="tableContainer">
-      <div class="title">登入歷史查詢</div>
-      <table class="table">
-        <thead>
-          <tr>
-            <th class="username">登入時間</th>
-            <th class="role">瀏覽器</th>
-            <th class="status">登入設備</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(user, index) in users" :key="index">
-            <td class="username">{{ user.username }}</td>
-            <td class="role">{{ user.role }}</td>
-            <td class="role">{{ user.device }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  <div class="login-history">
+    <h2>登入歷史查詢</h2>
+    <table v-if="loginRecordsPaginated.length > 0">
+      <thead>
+        <tr>
+          <th>Record Id</th>
+          <th>Login Time</th>
+          <th>IP Address</th>
+          <th>OS Name</th>
+          <th>Browser</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="record in loginRecordsPaginated" :key="record.recordId">
+          <td>{{ record.recordId }}</td>
+          <td>{{ record.loginTime }}</td>
+          <td>{{ record.ipAddress }}</td>
+          <td>{{ record.osName }}</td>
+          <td>{{ record.browser }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <p v-else>No login records found.</p>
 
+    <!-- Pagination Controls -->
+    <div class="pagination" v-if="totalPages > 1">
+      <button @click="prevPage" :disabled="currentPage === 1">Previous</button>
+      <span>Page {{ currentPage }} of {{ totalPages }}</span>
+      <button @click="nextPage" :disabled="currentPage === totalPages">Next</button>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
+import axios from 'axios';
+import TokenStore from "@/utils/TokenStore";
 
-const users = ref([
-  {  username: '0106', role: 'google', device: 'phone' },
-  {  username: '0107', role: 'fox', device: 'phone' },
-  {  username: '0108', role: 'google', device: 'phone'},
-  {  username: '0108', role: 'fox', device: 'phone' },
-  {  username: '0108', role: 'fox', device: 'phone'},
-]);
+const loginRecords = ref([]);
+const currentPage = ref(1);
+const itemsPerPage = 10;
+const userId = localStorage.getItem("userId"); // 從 TokenStore 或 localStorage 中獲取 userId
+
+onMounted(async () => {
+  const token = TokenStore.getToken();
+
+  if (!token) {
+    console.error("No token found. Unable to fetch login records.");
+    return;
+  }
+
+  try {
+    const response = await axios.get(`http://localhost:8080/api/user/loginRecord/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}` // 將 token 添加到 Authorization header
+      }
+    });
+    loginRecords.value = response.data;
+    console.log("Login records fetched successfully:", loginRecords.value);
+  } catch (error) {
+    console.error('Failed to fetch login records:', error);
+  }
+});
+
+const totalPages = computed(() => Math.ceil(loginRecords.value.length / itemsPerPage));
+const loginRecordsPaginated = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  return loginRecords.value.slice(start, end);
+});
+
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++;
+  }
+};
+
+const prevPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value--;
+  }
+};
 </script>
 
-
 <style scoped>
-.container {
+.login-history {
   margin: 20px auto;
-}
-
-.tableContainer {
-  position: relative;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.table {
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 800px;
-  border-collapse: collapse;
+  max-width: 800px;
   text-align: center;
-  border: darkgray solid 2px;
 }
 
-.addbtn {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  padding: 4px;
-  background-color: gray;
-  border-radius: 8px;
-  font-size: 16px;
+h2 {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+thead {
+  background-color: #f4f4f4;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+th {
+  font-weight: bold;
+}
+
+.pagination {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+button {
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s;
 }
 
-.addbtn:hover {
-  background-color: orange;
+button:hover:not([disabled]) {
+  background-color: #ddd;
 }
 
-
-.tableContainer {
-  position: relative;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.table {
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 800px;
-  border-collapse: collapse;
-  text-align: center;
-  border: darkgray solid 2px;
-}
-
-.table th,
-.table td {
-  vertical-align: middle;
-  border: darkgray solid 2px;
-  background-color: #fff;
-  padding: 4px;
-}
-
-.table thead th {
-  background-color: gold;
-  font-weight: bold;
-}
-
-.button {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-}
-
-.btn:hover {
-  background-color: rgb(255, 165, 0, 0.7);
-}
-
-.title {
-  position: relative;
-  bottom: 32px;
-  display: flex;
-  justify-content: center;
-  font-size: 24px;
-  font-weight: bold;
-}
-
-.username {
-  min-width: 180px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.role {
-  min-width: 80px;
-}
-
-@media screen and (max-width: 1200px) {
-
-  .username {
-    min-width: 120px;
-  }
-
-  .role {
-    min-width: 80px;
-  }
-}
-
-@media screen and (max-width: 992px) {
-  .username {
-    display: none;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .container {
-    margin: 100px auto;
-    height: auto;
-  }
-
-  .table {
-    width: 325px;
-  }
-
-  .table th,
-  .table td {
-    padding: 2px;
-    font-size: 12px;
-  }
-
-  .role {
-    width: 44px;
-    min-width: 44px;
-  }
-
-  .email {
-    max-width: 100px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .status {
-    max-width: 56px;
-    width: 56px;
-    min-width: 52px;
-  }
-
-  .function {
-    min-width: 90px;
-  }
-
-
+button:disabled {
+  background-color: #f4f4f4;
+  cursor: not-allowed;
 }
 </style>
