@@ -70,6 +70,7 @@ items.value.forEach((item, index) => {
 /* 設定購物車容器 */
 .cart-contain {
   max-width: 800px;
+  min-height: 500px;
   margin: auto;
   padding: 20px;
   border: none;
