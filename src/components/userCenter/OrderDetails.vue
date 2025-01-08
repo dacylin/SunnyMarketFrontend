@@ -47,7 +47,7 @@ const fetchOrders = async () => {
     // 設定 Axios 請求的 headers
     if (token) {
       const response = await axios.get(
-        `http://localhost:8080/orders/${userId}/getAllOrders`, // 修改為你的 API 路徑
+        `http://localhost:8080/orders/getAllOrders`, // 修改為你的 API 路徑
         {
           headers: {
             Authorization: `Bearer ${token}`,  // 加入 JWT token
