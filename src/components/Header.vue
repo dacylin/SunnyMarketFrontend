@@ -18,7 +18,7 @@
       </router-link>
     </div>
     <div v-else>
-      <button to="/products" class="logout-btn" @click.native="logout">
+      <button class="logout-btn" @click.native="logout">
         <p>登出</p>
       </button>
       <router-link to="/usercenter" class="user-center-btn">
@@ -62,13 +62,26 @@ const isLoggedIn = computed(() => {
 });
 
 // 登出功能：移除 token 並更新狀態
-const logout = () => {
+const logout = async () => {
+  // 移除 Token
   TokenStore.removeToken();
-  console.log("登出後的Token值:", TokenStore.getToken());
+
+  // 確認 Token 是否為 null
+  const token = TokenStore.getToken();
+  if (token === null) {
+    console.log("Token 已被移除");
+  }
+
+  console.log("登出後的 Token 值:", token);
+
+  // 顯示提示訊息
   alert("您已成功登出！");
-  router.push("/products");
-  
+
+  // 使用 router 導航並強制刷新
+  await router.push("/"); // 確保導航完成
+  window.location.reload(); // 強制刷新頁面
 };
+
 </script>
 
 <style scoped>
