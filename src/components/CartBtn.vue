@@ -46,7 +46,7 @@ import { storeToRefs } from 'pinia' // 可以使用方法
   font-size: 16px;
   font-weight: bold; /* 加粗文字 */
   color: white;
-  background: orangered;
+  background: tomato;
   border-radius: 50%;
   width: 1.5em; /* 設定固定寬度 */
   height: 1.5em; /* 設定固定高度 */
