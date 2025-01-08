@@ -6,14 +6,9 @@
         <label>產品名稱：</label>
         <input v-model="form.name" required />
 
-        <label>機種：</label>
+        <label>分類：</label>
         <select v-model="form.category" required>
-          <option v-for="type in types" :key="type" :value="type">{{ type }}</option>
-        </select>
-
-        <label>型號：</label>
-        <select v-model="form.model" required>
-          <option v-for="brand in brands" :key="brand" :value="brand">{{ brand }}</option>
+          <option v-for="category in categories" :key="category" :value="category">{{ category }}</option>
         </select>
 
         <label>價格：</label>
@@ -32,7 +27,7 @@
 </template>
 
 <script setup>
-import { ref, watch, defineProps, defineEmits } from 'vue';
+import { ref, watch } from 'vue';
 
 const types = ['PHONE', 'PAD'];
 
@@ -50,7 +45,6 @@ const emit = defineEmits(['close', 'save']);
 const form = ref({
   name: '',
   category: '',
-  model: '',
   price: 0,
   stock: 0
 });
