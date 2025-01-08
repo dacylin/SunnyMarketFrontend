@@ -36,13 +36,15 @@
 
 </div>
 <TopButton/>
+<CartBtn/>
 <Footer />
 
 </template>
 <script setup>
 import Header from '@/components/Header.vue'
-import TopButton from '@/components/TopButton.vue'
 import Footer from '@/components/Footer.vue'
+import TopButton from '@/components/TopButton.vue'
+import CartBtn from "@/components/CartBtn.vue"; //導入 購物車按鈕組件
 import { useCartStore } from '@/stores/cartStore'; //載入pinia
 import { storeToRefs } from 'pinia' // 可以使用方法
 
@@ -53,14 +55,22 @@ const cartStore = useCartStore();
 const {items, totalPrice, totalQuantity} = storeToRefs(cartStore)
 // 直接從 store 中使用 actions
 const { removeItem, clearCart } = cartStore;
-console.log('items 值的實際資料:', items); 
+
+// 印出 items 中的所有商品資料
+console.log('items.value', items.value);
+
+// 或者使用 forEach 來遍歷並逐一印出每個商品
+items.value.forEach((item, index) => {
+  console.log(`cart.vue 商品 ${index + 1}:`, item);
+});
+
 </script>
 
 <style scoped>
 /* 設定購物車容器 */
 .cart-contain {
   max-width: 800px;
-  margin: 20px auto;
+  margin: auto;
   padding: 20px;
   border: none;
   border-radius: 5px;
