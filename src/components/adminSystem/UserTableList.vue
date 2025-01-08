@@ -3,118 +3,100 @@
     <div class="tableContainer">
       <div class="title">使用者管理列表</div>
       <div class="search">
-        <input class="searchInput" type="text" v-model="searchQuery" placeholder="搜尋使用者名稱" />
+        <input class="searchInput" type="text" v-model="search" placeholder="搜尋使用者名稱" @input="handleSearch" />
       </div>
       <table class="table">
         <thead>
           <tr>
             <th class="username">使用者名稱</th>
             <th class="email">使用者信箱</th>
-            <th class="role">權限</th>
-            <th class="status">狀態</th>
-            <th class="function">功能</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(user, index) in displayedUserData" :key="index">
+          <tr v-for="(user, index) in displayUsers" :key="index">
             <td class="username">{{ user.username }}</td>
             <td class="email">{{ user.email }}</td>
-            <td>{{ user.role }}</td>
-            <td>{{ user.isDelete ? '已停用' : '啟用中' }}</td>
-            <td>
-              <div class="button">
-                <button class="btn" @click="openModal(user)">編輯</button>
-                <button class="btn" @click="toggleUserStatus(user)">
-                  {{ user.isDelete ? '啟用' : '停用' }}
-                </button>
-              </div>
-            </td>
           </tr>
         </tbody>
       </table>
 
       <div class="pagination">
-        <button class="paginationButton" @click="handlePrevPage" :disabled="currentPage === 1">
+        <button class="paginationButton" @click="handlePrevPage" :disabled="pageNum === 1">
           上一頁
         </button>
         <span class="paginationText">
-          第 {{ currentPage }} 頁 / 共 {{ totalPages }} 頁
+          第 {{ pageNum }} 頁 / 共 {{ totalPages }} 頁
         </span>
-        <button class="paginationButton" @click="handleNextPage" :disabled="currentPage === totalPages">
+        <button class="paginationButton" @click="handleNextPage" :disabled="pageNum === totalPages">
           下一頁
         </button>
       </div>
     </div>
-    <EditUserModal :show="isModalVisible" :user="selectedUser" @close="closeModal" @save="updateUser" />
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
-import EditUserModal from './EditUserModal.vue';
+import { ref, onMounted, computed } from 'vue';
+import axios from 'axios';
 
-const users = ref([
-  { userid: '1', username: 'user1', email: 'user1@example.com', role: 'ADMIN', isDelete: false },
-  { userid: '2', username: 'user2', email: 'user2@example.com', role: 'USER', isDelete: false },
-  { userid: '3', username: 'user3', email: 'user3@example.com', role: 'USER', isDelete: true },
-  { userid: '4', username: 'user4', email: 'user4@example.com', role: 'ADMIN', isDelete: false },
-  { userid: '5', username: 'user5', email: 'user5@example.com', role: 'USER', isDelete: true },
-  { userid: '6', username: 'user6', email: 'user6@example.com', role: 'USER', isDelete: false },
-  { userid: '7', username: 'user7', email: 'user7@example.com', role: 'ADMIN', isDelete: false },
-  { userid: '8', username: 'user8', email: 'user8@example.com', role: 'USER', isDelete: true },
-  { userid: '9', username: 'user9', email: 'user9@example.com', role: 'USER', isDelete: false },
-  { userid: '10', username: 'user10', email: 'user1@example.com', role: 'ADMIN', isDelete: false },
-  { userid: '11', username: 'user12', email: 'user2@example.com', role: 'USER', isDelete: false },
-  { userid: '12', username: 'user13', email: 'user3@example.com', role: 'USER', isDelete: true },
-  { userid: '13', username: 'user14', email: 'user4@example.com', role: 'ADMIN', isDelete: false },
-  { userid: '14', username: 'user15', email: 'user5@example.com', role: 'USER', isDelete: true },
-  { userid: '15', username: 'user16', email: 'user6@example.com', role: 'USER', isDelete: false },
-  { userid: '16', username: 'user17', email: 'user7@example.com', role: 'ADMIN', isDelete: false },
-  { userid: '17', username: 'user18', email: 'user8@example.com', role: 'USER', isDelete: true },
-]);
+const users = ref([]);
+const pageNum = ref(1);
+const pageSize = ref(10);
+const totalPages = ref();
 
-const currentPage = ref(1);
-const itemsPerPage = ref(10);
+const search = ref('');
 
-const totalPages = computed(() => Math.ceil(users.value.length / itemsPerPage.value));
-const startIndex = computed(() => (currentPage.value - 1) * itemsPerPage.value);
-const displayedUserData = computed(() => users.value.slice(startIndex.value, startIndex.value + itemsPerPage.value));
+const getAllUser = () => {
+  const params = {
+    pageNum: pageNum.value,
+    pageSize: pageSize.value,
+    search: search.value,
+  }
+
+  axios
+    .get(`http://localhost:8080/api/user/getAllUsers`, { params }) // 修正 URL 的 userId 拼接方式)
+    .then((response) => {
+      users.value = response.data.list;
+      totalPages.value = Math.ceil(response.data.total / pageSize.value);
+    })
+    .catch((error) => {
+      console.error("無法查詢使用者", error);
+    });
+};
+
+onMounted(() => {
+  getAllUser();
+});
+
 
 const handlePrevPage = () => {
-  if (currentPage.value > 1) {
-    currentPage.value--;
+  if (pageNum.value > 1) {
+    pageNum.value--;
+    getAllUser();
   }
 };
 
 const handleNextPage = () => {
-  if (currentPage.value < totalPages.value) {
-    currentPage.value++;
+  if (pageNum.value < totalPages.value) {
+    pageNum.value++;
+    getAllUser();
   }
 };
 
-const toggleUserStatus = (user) => {
-  user.isDelete = !user.isDelete;
-};
+const handleSearch = () => {
+  pageNum.value = 1;
+  getAllUser();
+}
 
-const isModalVisible = ref(false);
-const selectedUser = ref(null);
-
-const openModal = (user) => {
-  selectedUser.value = user;
-  isModalVisible.value = true;
-};
-
-const closeModal = () => {
-  isModalVisible.value = false;
-};
-
-const updateUser = (updatedUser) => {
-  const index = users.value.findIndex((u) => u.userid === updatedUser.userid);
-  if (index !== -1) {
-    users.value[index] = updatedUser;
-  }
-  closeModal();
-};
+// 計算補足的空白行
+const displayUsers = computed(() => {
+  const emptyRows = 10 - users.value.length; // 確保顯示 10 行
+  const placeholders = Array.from({ length: emptyRows }, () => ({
+    username: '',
+    email: '',
+  }));
+  return [...users.value, ...placeholders];
+});
 </script>
 
 
@@ -178,6 +160,7 @@ const updateUser = (updatedUser) => {
   border: darkgray solid 2px;
   background-color: #fff;
   padding: 4px;
+  height: 44px;
 }
 
 .table thead th {
@@ -198,7 +181,7 @@ const updateUser = (updatedUser) => {
   border-radius: 8px;
   font-size: 16px;
   transition: background-color 0.3s ease;
-  border:none;
+  border: none;
 }
 
 .btn:hover {
@@ -222,7 +205,7 @@ const updateUser = (updatedUser) => {
   border-radius: 8px;
   transition: background-color 0.3s ease;
   background-color: lightgray;
-  border:none;
+  border: none;
 }
 
 .paginationButton:hover {
@@ -337,7 +320,7 @@ const updateUser = (updatedUser) => {
     font-size: 12px;
     cursor: pointer;
     background-color: lightgray;
-    border:none;
+    border: none;
   }
 
   .paginationText {
