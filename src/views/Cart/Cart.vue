@@ -65,8 +65,8 @@ const checkOut = async () => {
   const payload = TokenStore.decodeToken(token); // 解析 token
   const userId = payload?.userId; // 獲取 userId
   if (!token) {
-    console.error("請先登入，在結帳");
-    alert("請先登入，在結帳");
+    console.error("請先登入再結帳");
+    alert("請先登入再結帳");
     return;
   }
   console.log('userId:', userId);
