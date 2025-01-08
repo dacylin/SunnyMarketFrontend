@@ -2,40 +2,37 @@
   <Header />
   <div class="register-title">會員註冊</div>
   <div class="router-text">
-    <router-link to="/"
-      class="homepage"><span>首頁</span></router-link><span>&nbsp&nbsp&nbsp&nbsp&nbsp>&nbsp&nbsp&nbsp&nbsp&nbsp</span><span>建立帳戶</span>
+    <router-link to="/" class="homepage"><span>首頁</span></router-link
+    ><span>&nbsp&nbsp&nbsp&nbsp&nbsp>&nbsp&nbsp&nbsp&nbsp&nbsp</span
+    ><span>建立帳戶</span>
   </div>
   <div class="background">
     <div class="register-box">
       <div class="register-card">
         <div class="register-label">會員註冊</div>
-        <form @submit.prevent="registerAdd">
-          <div class="form-item">
-            <input type="email" id="Email" v-model="registerForm.email" placeholder="請輸入電子郵件" required />
-          </div>
-          <div class="form-item">
-            <input type="password" id="Password" v-model="registerForm.password" placeholder="請輸入密碼" required />
-          </div>
-          <div class="form-item">
-            <input type="password" id="ConfirmPassword" v-model="registerForm.confirmpassword" placeholder="請再次輸入密碼" required />
-          </div>
-          <div class="form-item">
-            <input type="text" id="username" v-model="registerForm.username" placeholder="請輸入姓名" required />
-          </div>
-          <div class="form-item">
-            <input type="date" id="birthday" v-model="registerForm.birthday" required />
-          </div>
-          <div class="form-item">
-            <input type="text" id="address" v-model="registerForm.address" placeholder="請輸入住址" required />
-          </div>
-          <div class="form-item">
-            <input type="tel" id="phone" v-model="registerForm.phoneNumber" placeholder="請輸入手機號碼" required />
+        <form @submit.prevent="validateAndRegister">
+          <div
+            v-for="(field, key) in fields"
+            :key="key"
+            class="form-item"
+          >
+            <input
+              :type="field.type"
+              :id="key"
+              v-model="registerForm[key]"
+              :placeholder="field.placeholder"
+              @blur="() => validateField(key)"
+              required
+            />
+            <div v-if="errors[key]" class="error">{{ errors[key] }}</div>
           </div>
           <div class="form-actions">
             <button type="submit">會員註冊</button>
           </div>
         </form>
-        <router-link to = "/user/login" class="loginurl"><button class="login-button">回登入頁</button></router-link>
+        <router-link to="/user/login" class="loginurl">
+          <button class="login-button">回登入頁</button>
+        </router-link>
       </div>
     </div>
   </div>
@@ -43,40 +40,106 @@
 </template>
 
 <script setup>
-import { ref, onMounted, reactive } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
-import useTokenStore from "@/stores/TokenCheck.js";
 import api from "@/utils/Request.js";
-import Header from "@/components/Header.vue"; // 引入 Header 元件
-import Footer from "@/components/Footer.vue"; // 引入 Footer 元件
+import Header from "@/components/Header.vue";
+import Footer from "@/components/Footer.vue";
 
 const registerForm = ref({
   email: "",
   password: "",
   confirmpassword: "",
   birthday: "",
-  username:"",
-  address:"",
-  phoneNumber:""
+  username: "",
+  address: "",
+  phoneNumber: "",
 });
 
-const isRegister = ref(false);
+const errors = ref({});
 
-const tokenStore = useTokenStore();
+const fields = {
+  email: { type: "email", placeholder: "請輸入電子郵件", validate: "email" },
+  password: { type: "password", placeholder: "請輸入密碼", validate: "password" },
+  confirmpassword: {
+    type: "password",
+    placeholder: "請再次輸入密碼",
+    validate: "confirmPassword",
+  },
+  username: { type: "text", placeholder: "請輸入姓名", validate: "required" },
+  birthday: { type: "date", placeholder: "請輸入生日", validate: "required" },
+  address: { type: "text", placeholder: "請輸入住址", validate: "required" },
+  phoneNumber: {
+    type: "tel",
+    placeholder: "請輸入手機號碼",
+    validate: "phoneNumber",
+  },
+};
+
 const router = useRouter();
 
+const validateField = (key) => {
+  const value = registerForm.value[key];
+  const rule = fields[key]?.validate;
+
+  switch (rule) {
+    case "email":
+      errors.value[key] = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+        ? ""
+        : "請輸入有效的電子郵件";
+      break;
+    case "password":
+      errors.value[key] =
+        value.length >= 6 ? "" : "密碼長度至少為6個字符";
+      break;
+    case "confirmPassword":
+      errors.value[key] =
+        value === registerForm.value.password ? "" : "密碼不一致";
+      break;
+    case "phoneNumber":
+      errors.value[key] =
+        /^09\d{8}$/.test(value) ? "" : "請輸入有效的手機號碼 (09 開頭)";
+      break;
+    case "required":
+      errors.value[key] = value ? "" : "此欄位不可為空";
+      break;
+    default:
+      errors.value[key] = "";
+  }
+};
+
+const validateAndRegister = () => {
+  Object.keys(fields).forEach((key) => validateField(key));
+
+  const hasErrors = Object.values(errors.value).some((error) => error);
+
+  if (!hasErrors) {
+    registerAdd();
+  }
+};
+
 const registerAdd = async () => {
-  let { data } = await api.post("/api/user/register", registerForm.value);
-  if (data !== null) {
-    isRegister.value = false;
-    setTimeout(() => {
-        router.push("/user/Login");
-      }, 3000);
-  } else {
-    alert("註冊失败");
+  try {
+    const { data } = await api.post("/api/user/register", registerForm.value);
+    if (data) {
+      alert("註冊成功");
+      setTimeout(() => router.push("/user/Login"), 3000);
+    } else {
+      alert("註冊失敗");
+    }
+  } catch (error) {
+    alert("發生錯誤，請稍後再試");
   }
 };
 </script>
+
+<style>
+.error {
+  color: red;
+  font-size: 0.9em;
+}
+</style>
+
 
 <style scoped>
 .register-title {

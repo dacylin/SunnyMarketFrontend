@@ -5,7 +5,6 @@ import ProductDetail from "@/views/ProductDetail.vue";
 import ProductPage from "@/views/ProductPage.vue";
 import AIService from "@/views/AIService.vue";
 import Login from "@/views/Login.vue";
-import Layout from "@/views/Layout.vue";
 import Register from "@/views/Register.vue";
 // 導入 會員中心 組件
 import UserCenter from "@/views/User/UserCenter.vue";
@@ -56,11 +55,6 @@ const router = createRouter({
       path: "/user/Register",
       name: "Register",
       component: Register,
-    },
-    {
-      path: "/user/Layout",
-      name: "Layout",
-      component: Layout,
     },
     //購物車路由
     {
