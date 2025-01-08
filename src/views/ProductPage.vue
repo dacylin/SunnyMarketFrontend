@@ -108,7 +108,6 @@ const addToCart = (product) => {
   console.log('點擊加入購物車，傳入的商品:', product);
   console.log('點擊加入購物車，商品 ID:', product.productId);
   cartStore.addItem(product); // 這裡會呼叫 cartStore 的 addItem
-  console.log('addItem商品 ID:', product.productId);
 };
 // 搜尋
 const searchBtn = () => {

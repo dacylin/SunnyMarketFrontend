@@ -5,6 +5,8 @@
   <table v-if="items.length > 0" border="1">
       <thead>
         <tr>
+          <th>商品圖片</th>
+          <th>商品Id</th>
           <th>商品名稱</th>
           <th>價格</th>
           <th>數量</th>
@@ -17,12 +19,13 @@
           <td>
             <img :src="item.imageUrl" alt="商品圖片" style="width: 100px; height: auto;" />
           </td>
+          <td>{{ item.productId }}</td>  
           <td>{{ item.productName }}</td>        
           <td>${{ item.price }}</td>
           <td>{{ item.quantity }}</td>
           <td>${{ item.price * item.quantity }}</td>
           <td>
-            <button @click="() => { console.log('按鈕點擊:', item.id); removeItem(item.id); }">移除</button>
+            <button @click="() => { console.log('按鈕點擊移除:', item.productId); removeItem(item.productId); }">移除</button>
           </td>
         </tr>
       </tbody>
@@ -51,8 +54,7 @@ const cartStore = useCartStore();
 const {items, totalPrice, totalQuantity} = storeToRefs(cartStore)
 // 直接從 store 中使用 actions
 const { removeItem, clearCart } = cartStore;
-console.log('items的值:', items);
-console.log('items 值的實際資料:', items.value); 
+console.log('items 值的實際資料:', items); 
 </script>
 
 <style scoped>
