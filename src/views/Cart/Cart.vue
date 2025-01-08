@@ -33,6 +33,7 @@
     <p>📦 總品項 {{ totalQuantity }} 項</p>
     <p>🧾 總金額 NT$ {{ totalPrice }}</p>
     <button @click="clearCart">清空購物車</button>
+    <button @click="checkOut">結帳</button>
 
 </div>
 <TopButton/>
@@ -45,15 +46,54 @@ import TopButton from '@/components/TopButton.vue'
 import Footer from '@/components/Footer.vue'
 import { useCartStore } from '@/stores/cartStore'; //載入pinia
 import { storeToRefs } from 'pinia' // 可以使用方法
+import TokenStore from "@/utils/TokenStore"; //userId
+import axios from 'axios';
+
 
 // 初始化 Pinia 的 store
 const cartStore = useCartStore();
-
 // 使用 storeToRefs 解構 state 和 getters
 const {items, totalPrice, totalQuantity} = storeToRefs(cartStore)
 // 直接從 store 中使用 actions
 const { removeItem, clearCart } = cartStore;
 console.log('items 值的實際資料:', items); 
+// 結帳
+const checkOut = async () => {
+  // 從 Token 中取得 userId
+  const token = TokenStore.getToken();
+  const payload = TokenStore.decodeToken(token); // 解析 token
+  const userId = payload?.userId; // 獲取 userId
+  if (!token) {
+    console.error("請先登入，在結帳");
+    alert("請先登入，在結帳");
+    return;
+  }
+  console.log('userId:', userId);
+  console.log('items:', items.value);
+  //組合購物車資料
+  const buyItemList = items.value.map(item => ({
+    productId: item.productId,
+    quantity: item.quantity,
+  }));
+  //發送api
+  try {
+    const response = await axios.post(`http://localhost:8080/orders/${userId}/createOrder`, {
+      buyItemList: buyItemList,
+    });
+    console.log("訂單建立成功",response.data);
+    alert("訂單建立成功！");
+    clearCart(); // 清空購物車
+    
+  } catch (error) {
+    // axios 錯誤物件
+    if(error.response){
+      console.error("後端返回錯誤：",error.response.data);
+    }else {
+      console.error("結帳時發生錯誤：",error.message);
+    }
+  }
+
+};
 </script>
 
 <style scoped>
