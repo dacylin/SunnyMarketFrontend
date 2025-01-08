@@ -27,6 +27,11 @@
     </div>
     <div class="features">
       <CartBtn />
+      <span class="count">購物車數量: {{ cartQuantity }}</span>
+      <router-link to = "/cart"><p> 購物車</p></router-link>
+
+      <span></span>
+   
     </div>
   </header>
 </template>
@@ -83,6 +88,7 @@ const logout = async () => {
 };
 
 </script>
+
 
 <style scoped>
 header {

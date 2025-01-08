@@ -33,7 +33,7 @@ import axios from "axios";
 import TokenStore from "@/utils/TokenStore";// 引用 TokenStore
 
 // 預設用戶 ID Brian（測試用，要記得改掉）
-const userId = 2;
+const userId = 1;
 
 // 儲存訂單資料
 const orders = ref([]);

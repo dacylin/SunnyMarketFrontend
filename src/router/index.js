@@ -17,6 +17,9 @@ import AdminBackend from "@/views/Admin/AdminBackend.vue";
 import UserTableList from "@/components/adminSystem/UserTableList.vue";
 import ProductTableList from "@/components/adminSystem/ProductTableList.vue";
 import OrdertableList from "@/components/adminSystem/OrdertableList.vue";
+// 導入 購物車組件 (記得修改)
+import Cart from "@/views/Cart/Cart.vue";
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL), // 定義路由歷史模式
@@ -59,6 +62,14 @@ const router = createRouter({
       name: "Layout",
       component: Layout,
     },
+    //購物車路由
+    {
+      path: "/Cart",
+      name: "Cart",
+      component: Cart,
+    },
+
+
     // 添加會員中心路由
     {
       path: "/usercenter",

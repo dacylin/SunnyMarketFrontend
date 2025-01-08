@@ -21,11 +21,22 @@
      /routerlink> -->
      
     <!-- 加入商品數量的計數器    -->
-    <span class="count">0</span>
+    <span class="count"> {{ cartQuantity }}</span>
+
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { defineProps } from "vue";
+
+// 接收來自父組件的購物車總數量
+const props = defineProps({
+  cartQuantity: {
+    type: Number,
+    default: 0,
+  },
+});
+</script>
 
 <style scoped>
 .cartbtn {
