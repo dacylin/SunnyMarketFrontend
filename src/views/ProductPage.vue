@@ -60,7 +60,7 @@
           <img :src="product.imageUrl" alt="商品圖片" class="product-image" />
           <div class="product-details">
             <h3 class="product-title">{{ product.productName }}</h3>
-            <p class="product-category">{{ product.productId }}</p>
+            <!-- <p class="product-category">{{ product.productId }}</p> -->
             <p class="product-category">{{ product.category }}</p>
             <p class="product-price">NT$ {{ product.price }}</p>
             <p class="product-description">{{ product.description }}</p>
@@ -81,6 +81,7 @@
       </button>
     </div>
   </div>
+  <CartBtn />
   <TopButton />
   <Footer />
 </template>
@@ -91,6 +92,7 @@ import axios from "axios";
 import Header from "@/components/Header.vue"; // 引入 Header 元件
 import Footer from "@/components/Footer.vue"; // 引入 Footer 元件
 import TopButton from "@/components/TopButton.vue"; //引入 TopButton 元件
+import CartBtn from "@/components/CartBtn.vue"; //引入 CartBtn 元件
 import { useCartStore } from "@/stores/cartStore"; // 引入Store 
 
 const selectedCategory = ref(""); // 分類篩選
@@ -212,7 +214,7 @@ onMounted(() => {
 
 /* 商品容器 */
 .product-container {
-  margin-top: 20px;
+  margin: 50px 100px;
   display: flex;
   justify-content: center;
 }
@@ -220,8 +222,8 @@ onMounted(() => {
 .product-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr); /* 每排 3 個產品 */
-  gap: 20px; /* 產品間距 */
-  max-width: 1200px; /* 限制最大寬度 */
+  gap: 10px; /* 產品間距 */
+  max-width: 1000px; /* 限制最大寬度 */
   width: 100%;
   justify-items: center; /* 水平置中 */
 }
@@ -240,6 +242,8 @@ onMounted(() => {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease-in-out;
   text-decoration: none; /* 移除底線 */
+  width: 300px; /* 設定寬度為 100px */
+  height: auto; /* 自動調整高度 */
 }
 
 
