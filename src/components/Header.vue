@@ -26,19 +26,12 @@
       </router-link>
     </div>
     <div class="features">
-      <CartBtn />
-      <span class="count">購物車數量 {{ totalQuantity }}</span>
-      <router-link to = "/cart"><p> 購物車</p></router-link>
-
-      <span></span>
-   
     </div>
   </header>
 </template>
 
 <script setup>
 import navData from "@/nav/nav.js"; //默認導入 navData
-import CartBtn from "@/components/CartBtn.vue"; //導入 購物車按鈕組件
 import { ref, computed } from "vue";
 import TokenStore from "@/utils/TokenStore";
 import { useRouter } from "vue-router";

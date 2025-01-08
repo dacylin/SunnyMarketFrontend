@@ -5,7 +5,6 @@
       <thead>
         <tr>
           <th>商品圖片</th>
-          <th>商品Id</th>
           <th>商品名稱</th>
           <th>價格</th>
           <th>數量</th>
@@ -18,7 +17,6 @@
           <td>
             <img :src="item.imageUrl" alt="商品圖片" style="width: 100px; height: auto;" />
           </td>
-          <td>{{ item.productId }}</td>  
           <td>{{ item.productName }}</td>        
           <td>${{ item.price }}</td>
           <td>{{ item.quantity }}</td>
@@ -37,13 +35,15 @@
 
 </div>
 <TopButton/>
+<CartBtn/>
 <Footer />
 
 </template>
 <script setup>
 import Header from '@/components/Header.vue'
-import TopButton from '@/components/TopButton.vue'
 import Footer from '@/components/Footer.vue'
+import TopButton from '@/components/TopButton.vue'
+import CartBtn from "@/components/CartBtn.vue"; //導入 購物車按鈕組件
 import { useCartStore } from '@/stores/cartStore'; //載入pinia
 import { storeToRefs } from 'pinia' // 可以使用方法
 import TokenStore from "@/utils/TokenStore"; //userId
@@ -56,6 +56,7 @@ const cartStore = useCartStore();
 const {items, totalPrice, totalQuantity} = storeToRefs(cartStore)
 // 直接從 store 中使用 actions
 const { removeItem, clearCart } = cartStore;
+
 console.log('items 值的實際資料:', items); 
 // 結帳
 const checkOut = async () => {
@@ -94,12 +95,24 @@ const checkOut = async () => {
   }
 
 };
+
+
+// 印出 items 中的所有商品資料
+console.log('items.value', items.value);
+
+// 或者使用 forEach 來遍歷並逐一印出每個商品
+items.value.forEach((item, index) => {
+  console.log(`cart.vue 商品 ${index + 1}:`, item);
+});
+
+
 </script>
 
 <style scoped>
 /* 設定購物車容器 */
 .cart-contain {
-  max-width: 800px;
+  max-width: 1000px;
+  min-height: 500px;
   margin: 20px auto;
   padding: 20px;
   border: none;
