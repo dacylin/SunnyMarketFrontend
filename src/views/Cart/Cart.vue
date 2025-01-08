@@ -113,11 +113,11 @@ button:active {
 
 /* 清空按鈕樣式 */
 button:last-child {
-  background-color:  dimgray;
+  background-color:  #7b5e36;;
 }
 
 button:last-child:hover {
-  background-color:  orange;
+  background-color:  #7b5e36;;
 }
 
 p {
