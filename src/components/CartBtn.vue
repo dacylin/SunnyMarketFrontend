@@ -2,9 +2,8 @@
 
 <template>
   <div class="cartbtn">
-    
-    <!-- 還沒設路由，先註解掉 
-     <routerlink to="/cart" class="cart"> -->
+     
+     <router-link to="/cart">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="16"
@@ -17,25 +16,16 @@
           d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l.84 4.479 9.144-.459L13.89 4zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"
         />
       </svg>
-    <!-- 還沒設路由，先註解掉<
-     /routerlink> -->
+  </router-link>
      
     <!-- 加入商品數量的計數器    -->
-    <span class="count"> {{ cartQuantity }}</span>
+    
 
   </div>
 </template>
 
 <script setup>
-import { defineProps } from "vue";
 
-// 接收來自父組件的購物車總數量
-const props = defineProps({
-  cartQuantity: {
-    type: Number,
-    default: 0,
-  },
-});
 </script>
 
 <style scoped>
