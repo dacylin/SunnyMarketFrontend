@@ -1,164 +1,118 @@
 <template>
-  <div class="user-profile">
-    <h1>用戶個人資料</h1>
+  <div class="container">
+    <h1>User Profile</h1>
     <table class="profile-table">
       <thead>
         <tr>
-          <th>用戶名稱</th>
-          <th>地址</th>
-          <th>聯絡電話</th>
-          <th>生日</th>
-         
+          <th>電子郵件</th>
+          <th>會員姓名</th>
+          <th>會員地址</th>
+          <th>會員電話號碼</th>
+          <th>會員生日</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>{{ user.username }}</td>
-          <td>{{ user.address }}</td>
-          <td>{{ user.phoneNumber }}</td>
-          <td>{{ user.birthday }}</td>
-          
+          <td>{{ userFields.email }}</td>
+          <td>{{ userFields.username }}</td>
+          <td>{{ userFields.address}}</td>
+          <td>{{ userFields.phoneNumber }}</td>
+          <td>{{ userFields.birthday }}</td>
         </tr>
       </tbody>
     </table>
-
-    <button @click="isEditing = !isEditing">{{ isEditing ? '取消編輯' : '編輯資料' }}</button>
-
-    <!-- 編輯用戶資料 -->
-    <div v-if="isEditing" class="edit-form">
-      <table class="profile-table">
-        <thead>
-          <tr>
-            <th>用戶名稱</th>
-            <th>地址</th>
-            <th>聯絡電話</th>
-            <th>生日</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><input v-model="editUser.username" placeholder="用戶名稱" /></td>
-            <td><input v-model="editUser.phoneNumber" placeholder="電話號碼" /></td>
-            <td><input v-model="editUser.address" placeholder="地址" /></td>
-            <td><input type="date" v-model="editUser.birthday" /></td>
-          </tr>
-        </tbody>
-      </table>
-      <button @click="saveUserProfile">保存資料</button>
-    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
-import TokenStore from "@/utils/TokenStore";
+import { useRoute } from 'vue-router';
+import TokenStore from "@/utils/TokenStore"; 
 
-const user = ref({
-  username: '',
-  email: '',
-  phoneNumber: '',
-  birthday: '',
-  address: ''
-});
+const route = useRoute();
+const userId = route.params.userId;
 
-const editUser = ref({ ...user.value }); // 用於編輯模式的資料
-const isEditing = ref(false); // 控制是否進入編輯模式
-const userId = localStorage.getItem("userId"); // 使用者 ID
+// 定義欄位
+const userFields = {
+  email: {label: 'email', type: 'text'},
+  username: { label: 'Username', type: 'text' },
+  address: { label: 'Address', type: 'text' },
+  phoneNumber: { label: 'Phone Number', type: 'text' },
+  birthday: { label: 'Birthday', type: 'date' },
+};
 
-onMounted(async () => {
-  const token = TokenStore.getToken();
 
-  if (!token) {
-    console.error("No token found. Unable to fetch user profile.");
-    return;
-  }
-
+const fetchUserProfile = async () => {
   try {
-    // 獲取用戶資料
-    const response = await axios.get(`http://localhost:8080/api/user/${userId}`, {
-      headers: { Authorization: `Bearer ${token}` }
+    const token = TokenStore.getToken(); // 從 TokenStore 獲取 Token
+    const userId = localStorage.getItem('userId');
+
+    const response = await axios.get(`/api/user/profile/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // 在請求中攜帶 Token
+      },
     });
-    user.value = response.data;
-    editUser.value = { ...user.value }; // 初始化編輯資料
+    console.log("API Response:", response.data); 
+    Object.assign(editableUserProfile, response.data);
+
+    for (const key in userFields) {
+      isEditing[key] = false;
+    }
   } catch (error) {
-    console.error('Failed to fetch user profile:', error);
-  }
-});
-
-// 保存用戶資料
-const saveUserProfile = async () => {
-  const token = TokenStore.getToken();
-
-  if (!token) {
-    console.error("No token found. Unable to save user profile.");
-    return;
-  }
-
-  try {
-    await axios.post(`http://localhost:8080/api/user/updateUesr/${userId}`, editUser.value, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    user.value = { ...editUser.value }; // 更新用戶資料
-    isEditing.value = false; // 退出編輯模式
-  } catch (error) {
-    console.error('Failed to update user profile:', error);
+    console.error("Failed to fetch user profile:", error);
+    alert(`無法加載用戶資料，錯誤：${error.response?.status || "未知錯誤"}`);
+  } finally {
+    loading.value = false;
   }
 };
+
+onMounted(fetchUserProfile);
 </script>
 
 <style scoped>
-.user-profile {
-  margin: 20px auto;
+.container {
   max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.loading {
   text-align: center;
+  font-size: 18px;
+  color: gray;
 }
 
-.profile-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
+.row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
-thead {
-  background-color: #f4f4f4;
-}
-
-th, td {
-  border: 1px solid #ddd;
-  padding: 10px;
-  text-align: center;
-}
-
-th {
+.label {
   font-weight: bold;
+  margin-right: 10px;
+  width: 150px;
 }
 
-.edit-form {
-  margin-top: 20px;
+.value {
+  flex: 1;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 button {
+  margin-left: 10px;
   padding: 5px 10px;
-  border: 1px solid #ccc;
-  background-color: #f9f9f9;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s;
 }
 
-button:hover:not([disabled]) {
-  background-color: #ddd;
-}
-
-button:disabled {
-  background-color: #f4f4f4;
-  cursor: not-allowed;
+button:hover {
+  background-color: #0056b3;
 }
 </style>
-
-
-
-
-
-
-
