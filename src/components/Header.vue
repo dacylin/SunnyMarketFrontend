@@ -13,21 +13,21 @@
     </ul>
     <!-- 切換「登入」和「登出、會員中心」按鈕 -->
     <div v-if="!isLoggedIn">
-      <router-link to="/user/login" class="login-btn">
-        <p>登入</p>
+      <router-link to="/user/login">
+        <button class = "btn">登入</button>
       </router-link>
     </div>
     <div v-else>
-      <button class="logout-btn" @click.native="logout">
+      <button class = "btn" @click.native="logout">
         <p>登出</p>
       </button>
-      <router-link to="/usercenter" class="user-center-btn">
-        <p>會員中心</p>
+      <router-link to="/usercenter">
+        <button class = "btn">會員中心</button>
       </router-link>
     </div>
     <div class="features">
       <CartBtn />
-      <span class="count">購物車數量: {{ cartQuantity }}</span>
+      <span class="count">購物車數量 {{ totalQuantity }}</span>
       <router-link to = "/cart"><p> 購物車</p></router-link>
 
       <span></span>
@@ -42,6 +42,9 @@ import CartBtn from "@/components/CartBtn.vue"; //導入 購物車按鈕組件
 import { ref, computed } from "vue";
 import TokenStore from "@/utils/TokenStore";
 import { useRouter } from "vue-router";
+//抓購物車數量
+import { useCartStore } from '@/stores/cartStore'; //載入pinia
+import { storeToRefs } from 'pinia' // 可以使用方法
 
 const navs = ref(navData);
 const router = useRouter();
@@ -86,6 +89,13 @@ const logout = async () => {
   await router.push("/"); // 確保導航完成
   window.location.reload(); // 強制刷新頁面
 };
+
+//顯示購物車商品總數量
+  // 初始化 Pinia 的 store
+  const cartStore = useCartStore();
+
+  // 使用 storeToRefs 解構 state 和 getters
+  const {items, totalPrice, totalQuantity} = storeToRefs(cartStore)
 
 </script>
 
