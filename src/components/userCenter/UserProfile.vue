@@ -1,118 +1,197 @@
 <template>
-  <div class="container">
-    <h1>User Profile</h1>
-    <table class="profile-table">
-      <thead>
-        <tr>
-          <th>電子郵件</th>
-          <th>會員姓名</th>
-          <th>會員地址</th>
-          <th>會員電話號碼</th>
-          <th>會員生日</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>{{ userFields.email }}</td>
-          <td>{{ userFields.username }}</td>
-          <td>{{ userFields.address}}</td>
-          <td>{{ userFields.phoneNumber }}</td>
-          <td>{{ userFields.birthday }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <el-card class="user-profile-card" shadow="hover">
+    <h2 class="title">使用者資料</h2>
+    <template v-if="!editMode">
+      <div class="table-container">
+        <el-table :data="userData" border>
+          <el-table-column
+            prop="label"
+            label="項目"
+            width="120"
+          ></el-table-column>
+          <el-table-column prop="value" label="資料"></el-table-column>
+        </el-table>
+      </div>
+
+      <div class="actions">
+        <el-button type="primary" @click="enterEditMode">更新</el-button>
+      </div>
+    </template>
+
+    <template v-else>
+      <el-form
+        :model="formData"
+        :rules="rules"
+        ref="userForm"
+        label-width="100px"
+      >
+        <el-form-item label="使用者名稱" prop="username">
+          <el-input v-model="formData.username"></el-input>
+        </el-form-item>
+
+        <el-form-item label="地址" prop="address">
+          <el-input v-model="formData.address"></el-input>
+        </el-form-item>
+
+        <el-form-item label="電話號碼" prop="phoneNumber">
+          <el-input v-model="formData.phoneNumber"></el-input>
+        </el-form-item>
+
+        <el-form-item label="生日" prop="birthday">
+          <el-date-picker
+            v-model="formData.birthday"
+            type="date"
+            placeholder="選擇日期"
+          ></el-date-picker>
+        </el-form-item>
+
+        <div class="actions">
+          <el-button type="primary" @click="submitUpdate">提交</el-button>
+          <el-button @click="cancelEditMode">取消</el-button>
+        </div>
+
+      </el-form>
+    </template>
+  </el-card>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import axios from 'axios';
-import { useRoute } from 'vue-router';
-import TokenStore from "@/utils/TokenStore"; 
+import { reactive, ref, onMounted } from "vue";
+import { ElMessage } from "element-plus";
+import axios from "@/utils/Request"; // 使用封裝的 Axios 工具
 
-const route = useRoute();
-const userId = route.params.userId;
+// 靜態資料結構，表示使用者的四個資料項目
+const userData = reactive([
+  { label: "使用者名稱", value: "" },
+  { label: "地址", value: "" },
+  { label: "電話號碼", value: "" },
+  { label: "生日", value: "" },
+]);
 
-// 定義欄位
-const userFields = {
-  email: {label: 'email', type: 'text'},
-  username: { label: 'Username', type: 'text' },
-  address: { label: 'Address', type: 'text' },
-  phoneNumber: { label: 'Phone Number', type: 'text' },
-  birthday: { label: 'Birthday', type: 'date' },
+const formData = reactive({
+  username: "",
+  address: "",
+  phoneNumber: "",
+  birthday: "",
+});
+
+// 是否進入編輯模式
+const editMode = ref(false);
+
+// 表單驗證規則
+const rules = {
+  username: [{ required: true, message: "請輸入使用者名稱", trigger: "blur" }],
+  address: [{ required: true, message: "請輸入地址", trigger: "blur" }],
+  phoneNumber: [
+    { required: true, message: "請輸入電話號碼", trigger: "blur" },
+    {
+      pattern: /^[0-9]{8,15}$/,
+      message: "電話號碼格式不正確",
+      trigger: "blur",
+    },
+  ],
+  birthday: [{ required: true, message: "請選擇生日", trigger: "change" }],
 };
 
+// 進入編輯模式的方法
+const enterEditMode = () => {
+  editMode.value = true;
+  // 將靜態資料填充到表單中
+  formData.username = userData[0].value;
+  formData.address = userData[1].value;
+  formData.phoneNumber = userData[2].value;
+  formData.birthday = userData[3].value;
+};
 
-const fetchUserProfile = async () => {
+// 提交更新的方法
+const submitUpdate = async () => {
   try {
-    const token = TokenStore.getToken(); // 從 TokenStore 獲取 Token
-    const userId = localStorage.getItem('userId');
-
-    const response = await axios.get(`/api/user/profile/${userId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`, // 在請求中攜帶 Token
-      },
-    });
-    console.log("API Response:", response.data); 
-    Object.assign(editableUserProfile, response.data);
-
-    for (const key in userFields) {
-      isEditing[key] = false;
-    }
+    const userId = localStorage.getItem("userId");
+    await axios.put(`/api/user/updateUser/${userId}`, formData);
+    ElMessage.success("資料更新成功");
+    editMode.value = false;
+    await fetchUserData(); // 更新後重新載入資料
   } catch (error) {
-    console.error("Failed to fetch user profile:", error);
-    alert(`無法加載用戶資料，錯誤：${error.response?.status || "未知錯誤"}`);
-  } finally {
-    loading.value = false;
+    console.error("更新失敗:", error);
+    ElMessage.error("更新失敗，請稍後再試");
   }
 };
 
-onMounted(fetchUserProfile);
+// 取消編輯模式
+const cancelEditMode = () => {
+  editMode.value = false;
+};
+
+// 載入使用者資料的方法
+const fetchUserData = async () => {
+  try {
+    const userId = localStorage.getItem("userId"); // 從 localStorage 獲取 userId
+    const response = await axios.get(`/api/user/profile/${userId}`); // 調用後端 API
+    const { username, address, phoneNumber, birthday } = response.data;
+
+    // 更新表格資料
+    userData[0].value = username || "未提供";
+    userData[1].value = address || "未提供";
+    userData[2].value = phoneNumber || "未提供";
+    userData[3].value = birthday || "未提供";
+  } catch (error) {
+    console.error("載入資料失敗:", error);
+    ElMessage.error("無法獲取使用者資料");
+  }
+};
+
+// 在組件掛載時載入資料
+onMounted(() => {
+  fetchUserData();
+});
 </script>
 
 <style scoped>
-.container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
+.user-profile-container {
+    display: flex;
+    justify-content: flex-start; /* 與左側導航欄對齊 */
+    padding: 20px; /* 外部間距 */
 }
 
-.loading {
-  text-align: center;
-  font-size: 18px;
-  color: gray;
+.user-profile-card {
+    width: 100%; /* 固定寬度 */
+    max-width: 80%; /* 最大寬度限制 */
+    padding: 20px; /* 內邊距 */
+    border: 1px solid #dcdcdc; /* 邊框樣式 */
+    border-radius: 8px; /* 圓角效果 */
+    box-shadow: none; /* 去掉多餘陰影 */
+    overflow: hidden; /* 防止內容溢出 */
+    max-height: 400px; /* 限制最大高度 */
 }
 
-.row {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
+.table-container {
+    width: 100%;
+    margin-top: 10px; /* 表格上移 */
 }
 
-.label {
-  font-weight: bold;
-  margin-right: 10px;
-  width: 150px;
+.custom-table {
+    width: 100%; /* 表格寬度佔滿卡片 */
+    text-align: center; /* 表格文字居中 */
 }
 
-.value {
-  flex: 1;
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+.title {
+    font-size: 24px; /* 標題字體大小 */
+    font-weight: bold; /* 標題加粗 */
+    margin-bottom: 10px; /* 與表格間距 */
+    text-align: center; /* 標題靠左對齊 */
 }
 
-button {
-  margin-left: 10px;
-  padding: 5px 10px;
-  background-color: #007BFF;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+.actions {
+    margin-top: 20px;
+    text-align: center; /* 按鈕居中 */
 }
 
-button:hover {
-  background-color: #0056b3;
+.el-form-item {
+  margin-bottom: 15px;
 }
+
+.el-card:hover {
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1) !important; /* 調整陰影大小和透明度 */
+}
+
 </style>
