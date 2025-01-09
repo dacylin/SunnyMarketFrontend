@@ -19,7 +19,16 @@
           </td>
           <td>{{ item.productName }}</td>        
           <td>${{ item.price }}</td>
-          <td>{{ item.quantity }}</td>
+          <td>
+            <input
+            class="numinput"
+            type="number"
+            v-model.number="item.quantity"
+            @input="updateQuantity(item.productId, item.quantity)"
+            @blur="setDefaultQuantity(item)"
+            min="1"
+            />
+          </td>
           <td>${{ item.price * item.quantity }}</td>
           <td>
             <button @click="() => { console.log('點刪除按鈕', item.productId); removeItem(item.productId); }">刪除商品</button>
@@ -55,7 +64,7 @@ const cartStore = useCartStore();
 // 使用 storeToRefs 解構 state 和 getters
 const {items, totalPrice, totalQuantity} = storeToRefs(cartStore)
 // 直接從 store 中使用 actions
-const { removeItem, clearCart } = cartStore;
+const { removeItem, clearCart, updateQuantity, setDefaultQuantity } = cartStore;
 
 console.log('items 值的實際資料:', items); 
 // 結帳
@@ -89,6 +98,7 @@ const checkOut = async () => {
     // axios 錯誤物件
     if(error.response){
       console.error("後端返回錯誤：",error.response.data);
+      alert(`錯誤：${error.response.data.message}`);
     }else {
       console.error("結帳時發生錯誤：",error.message);
     }
@@ -184,5 +194,13 @@ p:nth-child(3), p:nth-child(4) {
   font-weight: bold;
   text-align: right;
   color: #555;
+}
+.numinput {
+  width: 100px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 14px;
 }
 </style>

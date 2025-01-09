@@ -42,6 +42,12 @@ export const useCartStore = defineStore("cartStore", {
         item.quantity = newQuantity; // 更新商品數量，如果數量小於 1，則設為 1
       }
     },
+    setDefaultQuantity(item) {
+      if (!item.quantity || item.quantity === null || item.quantity === undefined) {
+        item.quantity = 1; // 重設為 1
+        console.warn(`數量為空，已重設為 1 (商品 ID: ${item.productId})`);
+      }
+    },
     clearCart() {
       this.items = [];
     },
