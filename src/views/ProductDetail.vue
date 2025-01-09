@@ -6,14 +6,13 @@
       <img :src="product.imageUrl" alt="Product Image 預定顯示圖片" />
     </div>
     <div class="content">
-      <!-- <p>{{ product.productId }}</p> -->
+      
       <span v-if="product.category === 'SEAFOOD'" class="category seafood">
         SEAFOOD
       </span>
       <span v-else class="category food">
         FOOD
       </span>
-      <h2>{{ product.productId }}</h2>
       <h2>{{ product.productName }}</h2>
       <h4>產品介紹</h4>
       <p>{{ product.description }}</p>

@@ -11,11 +11,7 @@
       <div class="register-card">
         <div class="register-label">會員註冊</div>
         <form @submit.prevent="validateAndRegister">
-          <div
-            v-for="(field, key) in fields"
-            :key="key"
-            class="form-item"
-          >
+          <div v-for="(field, key) in fields" :key="key" class="form-item">
             <input
               :type="field.type"
               :id="key"
@@ -60,7 +56,11 @@ const errors = ref({});
 
 const fields = {
   email: { type: "email", placeholder: "請輸入電子郵件", validate: "email" },
-  password: { type: "password", placeholder: "請輸入密碼", validate: "password" },
+  password: {
+    type: "password",
+    placeholder: "請輸入密碼",
+    validate: "password",
+  },
   confirmpassword: {
     type: "password",
     placeholder: "請再次輸入密碼",
@@ -89,16 +89,16 @@ const validateField = (key) => {
         : "請輸入有效的電子郵件";
       break;
     case "password":
-      errors.value[key] =
-        value.length >= 6 ? "" : "密碼長度至少為6個字符";
+      errors.value[key] = value.length >= 6 ? "" : "密碼長度至少為6個字符";
       break;
     case "confirmPassword":
       errors.value[key] =
         value === registerForm.value.password ? "" : "密碼不一致";
       break;
     case "phoneNumber":
-      errors.value[key] =
-        /^09\d{8}$/.test(value) ? "" : "請輸入有效的手機號碼 (09 開頭)";
+      errors.value[key] = /^09\d{8}$/.test(value)
+        ? ""
+        : "請輸入有效的手機號碼 (09XXOOOXXX)";
       break;
     case "required":
       errors.value[key] = value ? "" : "此欄位不可為空";
@@ -133,15 +133,12 @@ const registerAdd = async () => {
 };
 </script>
 
-<style>
+<style scoped>
 .error {
   color: red;
   font-size: 0.9em;
 }
-</style>
 
-
-<style scoped>
 .register-title {
   display: flex;
   justify-content: center;
@@ -151,7 +148,7 @@ const registerAdd = async () => {
 }
 
 .router-text {
-  background-color:rgb(230, 230, 230);
+  background-color: rgb(230, 230, 230);
   display: flex;
   justify-content: center;
 }
@@ -233,6 +230,10 @@ const registerAdd = async () => {
 .form-actions button[type="submit"] {
   background-color: black;
   color: white;
+}
+
+.form-actions button[type="submit"]:hover {
+  background-color: grey;
 }
 
 .form-actions button[type="button"] {

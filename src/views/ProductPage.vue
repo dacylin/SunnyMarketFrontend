@@ -6,7 +6,7 @@
       <div class="sort-center">
         <!-- 搜尋欄位 -->
         <div class="search-box">
-          <input type="text" v-model="search">
+          <input type="text" v-model="search" />
           <button class="searchBtn" @click="searchBtn">產品搜尋</button>
         </div>
         <!-- 分類篩選 -->
@@ -22,7 +22,6 @@
             <option value="SEAFOOD">海鲜</option>
           </select>
         </div>
-
 
         <!-- 排序依據 -->
         <div class="sort-item">
@@ -65,7 +64,9 @@
             <p class="product-price">NT$ {{ product.price }}</p>
             <p class="product-description">{{ product.description }}</p>
           </div>
-          <button class="add-to-cart" @click="addToCart(product)">加入購物車</button>
+          <button class="add-to-cart" @click="addToCart(product)">
+            加入購物車
+          </button>
         </div>
       </div>
     </div>
@@ -93,7 +94,7 @@ import Header from "@/components/Header.vue"; // 引入 Header 元件
 import Footer from "@/components/Footer.vue"; // 引入 Footer 元件
 import TopButton from "@/components/TopButton.vue"; //引入 TopButton 元件
 import CartBtn from "@/components/CartBtn.vue"; //引入 CartBtn 元件
-import { useCartStore } from "@/stores/cartStore"; // 引入Store 
+import { useCartStore } from "@/stores/cartStore"; // 引入Store
 
 const selectedCategory = ref(""); // 分類篩選
 const selectedSort = ref("price"); // 排序依據預設為價格
@@ -107,8 +108,8 @@ const cartStore = useCartStore(); //加入購物車
 
 //加入購物車
 const addToCart = (product) => {
-  console.log('點擊加入購物車，傳入的商品:', product);
-  console.log('點擊加入購物車，商品 ID:', product.productId);
+  console.log("點擊加入購物車，傳入的商品:", product);
+  console.log("點擊加入購物車，商品 ID:", product.productId);
   cartStore.addItem(product); // 這裡會呼叫 cartStore 的 addItem
 };
 // 搜尋
@@ -130,9 +131,8 @@ const fetchProducts = () => {
     order: selectedOrder.value || "ASC", // 排序方式
     pageNum: page.value,
     pageSize: pageSize.value,
-    search: search.value || undefined
+    search: search.value || undefined,
   };
- 
 
   axios
     .get("http://localhost:8080/api/products/getAllProducts", { params }) // 串接原本的 API
@@ -167,49 +167,41 @@ onMounted(() => {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-
-  
 }
 .sort-center {
   display: flex;
   gap: 30px;
   justify-content: center;
   align-items: center;
-  
 }
 .sort-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-
 }
 .sort-item label {
   margin-bottom: 10px;
-  
 }
 /* 搜尋欄位 */
-.search-box{
+.search-box {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap:20px;
-  font-size:20px;
-
+  gap: 20px;
+  font-size: 20px;
 }
 
-.searchBtn{
+.searchBtn {
   border: none;
-  width:150px;
-  padding:12px;
+  width: 150px;
+  padding: 12px;
   border-radius: 5px;
   font-size: 16px;
-  background-color: lightgray;
-  
+  background-color: rgb(230, 230, 230);
 }
 
-.searchBtn:hover{
-  background-color:rgb(200, 200, 200, 0.5);
-  
+.searchBtn:hover {
+  background-color: lightgray;
 }
 
 /* 商品容器 */
@@ -246,7 +238,6 @@ onMounted(() => {
   height: auto; /* 自動調整高度 */
 }
 
-
 .product-card:hover {
   transform: translateY(-5px);
 }
@@ -269,14 +260,14 @@ onMounted(() => {
 .product-title {
   margin: 10px 0;
   font-size: 16px;
-  color:slategray;
+  color: slategray;
   font-weight: bold;
   margin-bottom: 5px;
 }
 
 .product-price {
   font-size: 14px;
-  color:orangered;
+  color: orangered;
   font-weight: bold;
   margin-bottom: 10px;
 }
@@ -319,9 +310,8 @@ onMounted(() => {
   align-items: center;
   gap: 16px;
   font-size: 16px;
-  
 }
-.pagination button{
+.pagination button {
   border-radius: 10%;
   font-size: 16px;
   padding: 8px;
@@ -329,9 +319,7 @@ onMounted(() => {
   cursor: pointer;
 }
 
-.pagination button:hover{
+.pagination button:hover {
   border: 2px solid hsl(210, 85%, 75%);
-  
 }
 </style>
-
