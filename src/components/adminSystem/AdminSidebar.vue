@@ -22,7 +22,8 @@
 
 <!-- js設定 -->
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
+import TokenStore from "@/utils/TokenStore";
 import { useRouter, useRoute } from 'vue-router';
 
 const activeIndex = ref(null);
@@ -55,6 +56,32 @@ const setActive = (index, routePath) => {
 onMounted(() => {
     setInitialActiveIndex();
 });
+
+// 從 localStorage 獲取角色
+const role = computed(() => localStorage.getItem("role"));
+
+// 登出功能：移除 token 並更新狀態
+const logout = async () => {
+  console.log("角色準備登出", role.value);
+  // 移除 Token 跟 role
+  TokenStore.removeToken();
+  localStorage.removeItem("role");
+
+  // 確認 Token 是否為 null
+  const token = TokenStore.getToken();
+  if (token === null) {
+    console.log("Token 已被移除");
+  }
+  console.log("登出後的 Token 值:", token);
+
+  // 顯示提示訊息
+  alert("您已成功登出！");
+
+  // 使用 router 導航並強制刷新
+  await router.push("/"); // 確保導航完成
+
+};
+
 </script>
 
 <!-- css設定 -->
@@ -90,6 +117,7 @@ onMounted(() => {
 
 .headertext2 {
     font-size: 20px;
+    font-weight: bold;
     
 }
 
@@ -110,7 +138,7 @@ onMounted(() => {
 }
 
 .navlist li:hover {
-    color: orangered;
+    color: orange;
     
 }
 

@@ -15,20 +15,22 @@
           :class="{ active: activeIndex === 0 }"
           @click="setActive(0, orderdetails)"
         >
-          訂單明細查詢 orderdetails
+          訂單明細查詢
         </li>
         <li
           :class="{ active: activeIndex === 1 }"
-          @click="setActive(1, userprofile)"
+          @click="setActive(1, loginhistory)"
         >
-          修改會員資料 userprofile
+          登入歷史查詢
         </li>
+
         <li
           :class="{ active: activeIndex === 2 }"
-          @click="setActive(2, loginhistory)"
+          @click="setActive(2, userprofile)"
         >
-          登入歷史查詢 loginhistory
+          修改會員資料
         </li>
+       
         <li class="logoutButton" @click="logout">登出</li>
       </ul>
     </div>
@@ -37,7 +39,8 @@
 
 <!-- js設定 -->
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from 'vue';
+import TokenStore from "@/utils/TokenStore";
 import { useRouter, useRoute } from "vue-router";
 
 const activeIndex = ref(null);
@@ -47,6 +50,7 @@ const route = useRoute();
 const orderdetails = "/usercenter/orderdetails";
 const userprofile = "/usercenter/userprofile";
 const loginhistory = "/usercenter/loginhistory";
+
 
 // 根據路由初始化 activeIndex
 const setInitialActiveIndex = () => {
@@ -66,10 +70,36 @@ const setActive = (index, routePath) => {
   router.push(routePath);
 };
 
+// 從 localStorage 獲取角色
+const role = computed(() => localStorage.getItem("role"));
+
 // 初始化 activeIndex
 onMounted(() => {
-  setInitialActiveIndex();
+    setInitialActiveIndex();
 });
+
+
+// 登出功能：移除 token 並更新狀態
+const logout = async () => {
+  console.log("角色準備登出", role.value);
+  // 移除 Token 跟 role
+  TokenStore.removeToken();
+  localStorage.removeItem("role");
+
+  // 確認 Token 是否為 null
+  const token = TokenStore.getToken();
+  if (token === null) {
+    console.log("Token 已被移除");
+  }
+  console.log("登出後的 Token 值:", token);
+
+  // 顯示提示訊息
+  alert("您已成功登出！");
+
+  // 使用 router 導航並強制刷新
+  await router.push("/"); // 確保導航完成
+  
+};
 </script>
 
 <!-- css設定 -->

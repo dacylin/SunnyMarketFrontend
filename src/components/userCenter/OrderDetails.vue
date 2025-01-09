@@ -4,7 +4,7 @@
 <template>
   <div class="container">
     <div class="tableContainer">
-      <div class="title">訂單明細查詢 orderdetails</div>
+      <div class="title">訂單明細查詢</div>
       <table class="table">
         <thead>
           <tr>
@@ -84,20 +84,20 @@ onMounted(() => {
 
 .table {
   margin: 0 auto;
-  width: 800px;
+  width: 700px;
   border-collapse: collapse;
   text-align: center;
-  border: 2px solid darkgray;
+  border: 2px solid lightgray;
 }
 
 .table th,
 .table td {
-  border: 2px solid darkgray;
+  border: 2px solid lightgray;
   padding: 4px;
 }
 
 .table thead th {
-  background: gold;
+  background: rgb(255, 255, 100, 0.7);
   font-weight: bold;
 }
 

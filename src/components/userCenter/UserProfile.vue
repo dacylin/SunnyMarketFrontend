@@ -1,6 +1,8 @@
+<!-- userprofile.vue -->
+
 <template>
   <el-card class="user-profile-card" shadow="hover">
-    <h2 class="title">使用者資料</h2>
+    <h2 class="title">修改會員資料</h2>
     <template v-if="!editMode">
       <div class="table-container">
         <el-table :data="userData" border>
@@ -14,7 +16,7 @@
       </div>
 
       <div class="actions">
-        <el-button type="primary" @click="enterEditMode">更新</el-button>
+        <el-button type="primary" @click="enterEditMode">點此更新</el-button>
       </div>
     </template>
 
@@ -46,7 +48,7 @@
         </el-form-item>
 
         <div class="actions">
-          <el-button type="primary" @click="submitUpdate">提交</el-button>
+          <el-button type="primary" @click="submitUpdate">確認修改</el-button>
           <el-button @click="cancelEditMode">取消</el-button>
         </div>
 
@@ -149,19 +151,19 @@ onMounted(() => {
 <style scoped>
 .user-profile-container {
     display: flex;
-    justify-content: flex-start; /* 與左側導航欄對齊 */
     padding: 20px; /* 外部間距 */
 }
 
 .user-profile-card {
-    width: 100%; /* 固定寬度 */
-    max-width: 80%; /* 最大寬度限制 */
+    width: 700px; /* 固定寬度 */
+    height: auto;
     padding: 20px; /* 內邊距 */
     border: 1px solid #dcdcdc; /* 邊框樣式 */
     border-radius: 8px; /* 圓角效果 */
     box-shadow: none; /* 去掉多餘陰影 */
     overflow: hidden; /* 防止內容溢出 */
     max-height: 400px; /* 限制最大高度 */
+    margin:50px auto 0 auto;
 }
 
 .table-container {
@@ -184,6 +186,10 @@ onMounted(() => {
 .actions {
     margin-top: 20px;
     text-align: center; /* 按鈕居中 */
+}
+
+.actions button {
+    margin:30px 50px;
 }
 
 .el-form-item {
