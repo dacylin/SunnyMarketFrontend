@@ -18,12 +18,10 @@
       <h4>產品介紹</h4>
       <p>{{ product.description }}</p>
       <h3>NT$ {{ product.price }}</h3>
+      <button @click="addToCart(product)">加入購物車</button>
 
-      <!-- 數量調整按鈕 -->
-      <QuantityControl v-model="quantity" />
 
-      <!-- 加入購物車按鈕 -->
-      <button class="cartbtn">加入購物車</button>
+
     </div>
   </div>
   <Footer />
@@ -36,6 +34,7 @@ import TopButton from "@/components/TopButton.vue"; // 引入 TopButton 元件
 import QuantityControl from "@/components/QuantityControl.vue"; // 引入 +-數量按鈕組件
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
+import { useCartStore } from "@/stores/cartStore"; // 引入Store 
 
 // 使用 `ref` 定義資料
 const product = ref({});
@@ -45,6 +44,13 @@ const quantity = ref(1);
 // 路由
 const route = useRoute();
 const productId = route.params.productId;
+//加入購物車
+const cartStore = useCartStore();
+const addToCart = (product) => {
+  cartStore.addItem(product);
+};
+
+
 
 // 定義方法來獲取商品資料
 const getProductDetails = async (productId) => {
@@ -56,12 +62,13 @@ const getProductDetails = async (productId) => {
       const data = await response.json();
       product.value = data;
     } else {
-      console.error("商品 not found");
+      console.error("商品未找到");
     }
   } catch (error) {
-    console.error("錯誤 Error fetching product:", error);
+    console.error("錯誤: 無法獲取商品資料", error);
   }
 };
+
 
 // 在組件掛載時發送請求
 onMounted(() => {

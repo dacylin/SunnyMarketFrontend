@@ -5,7 +5,7 @@
         <div class="title">商品管理列表</div>
       </div>
       <div class="search">
-        <input class="searchInput" type="text" v-model="searchQuery" placeholder="搜尋產品名稱" />
+        <input class="searchInput" type="text" v-model="search" placeholder="搜尋產品名稱" @input="handleSearch" />
       </div>
       <div class="addbtn" @click="openAddModal">新增產品</div>
       <table class="table">
@@ -13,21 +13,19 @@
           <tr>
             <th class="productName">商品名稱</th>
             <th class="category">分類</th>
-            <th class="model">型號</th>
             <th class="price">價格</th>
             <th class="stock">庫存</th>
             <th class="function">新增日期</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(product, index) in displayedProductData" :key="index">
-            <td class="productName">{{ product.name }}</td>
+          <tr v-for="(product, index) in displayProducts" :key="index">
+            <td class="productName">{{ product.productName }}</td>
             <td class="category">{{ product.category }}</td>
-            <td class="model">{{ product.model }}</td>
             <td>{{ product.price }}</td>
             <td>{{ product.stock }}</td>
             <td>
-              <div class="button">
+              <div class="button" v-if="product.productName && product.category">
                 <button class="btn" @click="openEditModal(product)">編輯</button>
                 <button class="btn" @click="deleteProduct(product)">刪除</button>
               </div>
@@ -37,74 +35,68 @@
       </table>
 
       <div class="pagination">
-        <button class="paginationButton" @click="handlePrevPage" :disabled="currentPage === 1">
+        <button class="paginationButton" @click="handlePrevPage" :disabled="pageNum === 1">
           上一頁
         </button>
         <span class="paginationText">
-          第 {{ currentPage }} 頁 / 共 {{ totalPages }} 頁
+          第 {{ pageNum }} 頁 / 共 {{ totalPages }} 頁
         </span>
-        <button class="paginationButton" @click="handleNextPage" :disabled="currentPage === totalPages">
+        <button class="paginationButton" @click="handleNextPage" :disabled="pageNum === totalPages">
           下一頁
         </button>
       </div>
     </div>
-    <EditProductModal :show="isEditModalVisible" :product="selectedProduct" @close="closeModal"
-      @save="updateProduct" />
-    <AddProductModal :show="isAddModalVisible" :product="selectedProduct" @close="closeModal"
-      @save="addProduct" />
+    <EditProductModal :show="isEditModalVisible" :product="selectedProduct" @close="closeModal" @save="updateProduct" />
+    <AddProductModal :show="isAddModalVisible" :product="selectedProduct" @close="closeModal" @save="addProduct" />
 
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import EditProductModal from './EditProductModal.vue';
 import AddProductModal from './AddProductModal.vue';
+import axios from 'axios';
 
-// 產品資料
-const products = ref([
-  { productId: 1, name: 'iPad Air', category: 'PAD', model: 'APPLE', price: 18900, stock: 10 },
-  { productId: 2, name: 'Galaxy Tab S8', category: 'PAD', model: 'SAMSUNG', price: 20900, stock: 8 },
-  { productId: 3, name: 'iPhone 15', category: 'PHONE', model: 'APPLE', price: 32900, stock: 5 },
-  { productId: 4, name: 'Xperia 5', category: 'PHONE', model: 'SONY', price: 24900, stock: 7 },
-  { productId: 5, name: 'ZenPad', category: 'PAD', model: 'ASUS', price: 15900, stock: 4 },
-  { productId: 6, name: 'Realme C55', category: 'PHONE', model: 'REALME', price: 8990, stock: 12 },
-  { productId: 7, name: 'iPad Air', category: 'PAD', model: 'APPLE', price: 18900, stock: 10 },
-  { productId: 8, name: 'Galaxy Tab S8', category: 'PAD', model: 'SAMSUNG', price: 20900, stock: 8 },
-  { productId: 9, name: 'iPhone 15', category: 'PHONE', model: 'APPLE', price: 32900, stock: 5 },
-  { productId: 10, name: 'Xperia 5', category: 'PHONE', model: 'SONY', price: 24900, stock: 7 },
-  { productId: 11, name: 'ZenPad', category: 'PAD', model: 'ASUS', price: 15900, stock: 4 },
-  { productId: 12, name: 'Realme C55', category: 'PHONE', model: 'REALME', price: 8990, stock: 12 },
-  { productId: 13, name: 'iPad Air', category: 'PAD', model: 'APPLE', price: 18900, stock: 10 },
-  { productId: 14, name: 'Galaxy Tab S8', category: 'PAD', model: 'SAMSUNG', price: 20900, stock: 8 },
-  { productId: 15, name: 'iPhone 15', category: 'PHONE', model: 'APPLE', price: 32900, stock: 5 },
-  { productId: 16, name: 'Xperia 5', category: 'PHONE', model: 'SONY', price: 24900, stock: 7 },
-  { productId: 17, name: 'ZenPad', category: 'PAD', model: 'ASUS', price: 15900, stock: 4 },
-  { productId: 18, name: 'Realme C55', category: 'PHONE', model: 'REALME', price: 8990, stock: 12 },
-  { productId: 19, name: 'POCO X5', category: 'PHONE', model: 'POCO', price: 10900, stock: 9 }
-]);
+const products = ref([]);
+const pageNum = ref(1);
+const pageSize = ref(10);
+const totalPages = ref();
 
-// 分頁設定
-const currentPage = ref(1);
-const itemsPerPage = 10;
+const search = ref('');
 
-// 計算屬性
-const totalPages = computed(() => Math.ceil(products.value.length / itemsPerPage));
-const displayedProductData = computed(() => {
-  const startIndex = (currentPage.value - 1) * itemsPerPage;
-  return products.value.slice(startIndex, startIndex + itemsPerPage);
+const getAllProducts = () => {
+  const params = {
+    pageNum: pageNum.value,
+    pageSize: pageSize.value,
+    search: search.value
+  }
+  axios
+    .get("http://localhost:8080/api/products/getAllProducts", { params }) // 串接原本的 API
+    .then((response) => {
+      products.value = response.data.list; // 更新商品列表
+      totalPages.value = Math.ceil(response.data.total / pageSize.value);
+    })
+    .catch((error) => {
+      console.error("無法獲取商品資料:", error);
+    });
+};
+
+onMounted(() => {
+  getAllProducts();
 });
 
 // 分頁功能
 const handlePrevPage = () => {
-  if (currentPage.value > 1) {
-    currentPage.value--;
+  if (pageNum.value > 1) {
+    pageNum.value--;
+    getAllProducts();
   }
 };
-
 const handleNextPage = () => {
-  if (currentPage.value < totalPages.value) {
-    currentPage.value++;
+  if (pageNum.value < totalPages.value) {
+    pageNum.value++;
+    getAllProducts();
   }
 };
 
@@ -128,7 +120,6 @@ const openAddModal = () => {
   selectedProduct.value = {
     name: '',
     category: '',
-    model: '',
     price: 0,
     stock: 0,
   }; // 初始化表單
@@ -156,6 +147,23 @@ const addProduct = (newProduct) => {
   const newProductId = Math.max(...products.value.map((p) => p.productId)) + 1; // 自動生成唯一 ID
   products.value.push({ ...newProduct, productId: newProductId });
 };
+
+// 計算補足的空白行
+const displayProducts = computed(() => {
+  const emptyRows = 10 - products.value.length; // 確保顯示 10 行
+  const placeholders = Array.from({ length: emptyRows }, () => ({
+    productName: '',
+    category: '',
+    price: '',
+    stock: '',
+  }));
+  return [...products.value, ...placeholders];
+});
+
+const handleSearch = () => {
+  pageNum.value = 1;
+  getAllProducts();
+}
 </script>
 
 
@@ -174,7 +182,7 @@ const addProduct = (newProduct) => {
   top: 12px;
   right: 12px;
   padding: 10px;
-  background-color:lightgray;
+  background-color: lightgray;
   border-radius: 8px;
   font-size: 16px;
   cursor: pointer;
@@ -208,6 +216,7 @@ const addProduct = (newProduct) => {
   border: darkgray solid 2px;
   background-color: white;
   padding: 4px;
+  height: 44px;
 }
 
 .table thead th {
@@ -222,13 +231,13 @@ const addProduct = (newProduct) => {
 }
 
 .btn {
-  padding: 10px;
+  padding: 4px;
   margin: 0 4px 0 4px;
   background-color: lightgray;
   border-radius: 8px;
   font-size: 16px;
   transition: background-color 0.3s ease;
-  border:none;
+  border: none;
 }
 
 .btn:hover {
@@ -251,7 +260,7 @@ const addProduct = (newProduct) => {
   background-color: lightgray;
   border-radius: 8px;
   transition: background-color 0.3s ease;
-  border:none;
+  border: none;
 }
 
 .paginationButton:hover {
@@ -291,10 +300,6 @@ const addProduct = (newProduct) => {
 
 .category {
   min-width: 80px;
-}
-
-.model {
-  min-width: 100px;
 }
 
 .price {
