@@ -1,55 +1,52 @@
 <template>
   <Header />
-  <TopButton />
+
   <div class="container">
     <div class="imgdiv">
       <img :src="product.imageUrl" alt="Product Image 預定顯示圖片" />
     </div>
     <div class="content">
-      
       <span v-if="product.category === 'SEAFOOD'" class="category seafood">
         SEAFOOD
       </span>
-      <span v-else class="category food">
-        FOOD
-      </span>
+      <span v-else class="category food"> FOOD </span>
       <h2>{{ product.productName }}</h2>
       <h4>產品介紹</h4>
       <p>{{ product.description }}</p>
       <h3>NT$ {{ product.price }}</h3>
-      <button @click="addToCart(product)">加入購物車</button>
-
-
-
+      <button class="add-to-cart" @click.stop="addToCart(product)">
+        加入購物車
+      </button>
     </div>
   </div>
+  <TopButton />
+  <CartBtn />
   <Footer />
 </template>
 
 <script setup>
+import { ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
 import Header from "@/components/Header.vue"; // 引入 Header 元件
 import Footer from "@/components/Footer.vue"; // 引入 Footer 元件
 import TopButton from "@/components/TopButton.vue"; // 引入 TopButton 元件
-import QuantityControl from "@/components/QuantityControl.vue"; // 引入 +-數量按鈕組件
-import { ref, onMounted } from "vue";
-import { useRoute } from "vue-router";
-import { useCartStore } from "@/stores/cartStore"; // 引入Store 
+import CartBtn from "@/components/CartBtn.vue";
+import { useCartStore } from "@/stores/cartStore"; // 引入Store
 
-// 使用 `ref` 定義資料
-const product = ref({});
-// 數量按鈕控制
-const quantity = ref(1);
+const product = ref({}); // 商品列表
 
 // 路由
 const route = useRoute();
 const productId = route.params.productId;
+
 //加入購物車
-const cartStore = useCartStore();
+const cartStore = useCartStore(); 
+
 const addToCart = (product) => {
-  cartStore.addItem(product);
+  console.log("點擊加入購物車，傳入的商品:", product);
+  console.log("點擊加入購物車，商品 ID:", product.productId);
+  cartStore.addItem(product); // 這裡會呼叫 cartStore 的 addItem
 };
-
-
 
 // 定義方法來獲取商品資料
 const getProductDetails = async (productId) => {
@@ -68,14 +65,10 @@ const getProductDetails = async (productId) => {
   }
 };
 
-
 // 在組件掛載時發送請求
 onMounted(() => {
   getProductDetails(productId);
 });
-
-
-
 </script>
 
 <style scoped>
@@ -110,13 +103,11 @@ onMounted(() => {
 .content {
   display: flex;
   flex-direction: column;
-  width: 400px;
-  /* 圖片寬度 */
-  height: 400px;
-  /* 圖片高度 */
+  width: 400px;/* 圖片寬度 */
+  height: 400px;/* 圖片高度 */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   /* 增加陰影 */
-  padding: 30px;
+  padding: 40px;
   gap: 10px;
 }
 
@@ -136,25 +127,35 @@ onMounted(() => {
   font-size: 1em;
 }
 
+h2{
+  margin: 0;
+}
+
 h4 {
+  margin: 5px 0;
   color: dimgray;
 }
 
 h3 {
+  margin: 5px 0;
   color: orangered;
 }
 
-
-.cartbtn {
-  background-color: darkorange;
-  color: white;
+/* 加入購物車按鈕 */
+.add-to-cart {
+  background-color: #7b5e36;
+  color: #fff;
   border: none;
-  font-size: 1em;
-  padding: 10px;
+  padding: 10px 20px;
   border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: auto;
+  margin-bottom: 10px;
+  font-size: 1em;
 }
 
-.cartbtn:hover {
-  background-color: rgb(255, 140, 0, 0.7);
+.add-to-cart:hover {
+  background-color: #a07b47;
 }
 </style>
