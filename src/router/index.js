@@ -5,7 +5,6 @@ import ProductDetail from "@/views/ProductDetail.vue";
 import ProductPage from "@/views/ProductPage.vue";
 import AIService from "@/views/AIService.vue";
 import Login from "@/views/Login.vue";
-import Layout from "@/views/Layout.vue";
 import Register from "@/views/Register.vue";
 // 導入 會員中心 組件
 import UserCenter from "@/views/User/UserCenter.vue";
@@ -17,6 +16,9 @@ import AdminBackend from "@/views/Admin/AdminBackend.vue";
 import UserTableList from "@/components/adminSystem/UserTableList.vue";
 import ProductTableList from "@/components/adminSystem/ProductTableList.vue";
 import OrdertableList from "@/components/adminSystem/OrdertableList.vue";
+// 導入 購物車組件 (記得修改)
+import Cart from "@/views/Cart/Cart.vue";
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL), // 定義路由歷史模式
@@ -54,11 +56,14 @@ const router = createRouter({
       name: "Register",
       component: Register,
     },
+    //購物車路由
     {
-      path: "/user/Layout",
-      name: "Layout",
-      component: Layout,
+      path: "/Cart",
+      name: "Cart",
+      component: Cart,
     },
+
+
     // 添加會員中心路由
     {
       path: "/usercenter",

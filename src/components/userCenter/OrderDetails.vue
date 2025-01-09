@@ -4,7 +4,7 @@
 <template>
   <div class="container">
     <div class="tableContainer">
-      <div class="title">會員訂單總表</div>
+      <div class="title">訂單明細查詢 orderdetails</div>
       <table class="table">
         <thead>
           <tr>
@@ -15,7 +15,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="order in orders" :key="order.order_id">
+          <tr v-for="order in orders" :key="order.orderId">
             <td>{{ order.userId  }}</td>
             <td>{{ order.orderId  }}</td>
             <td>{{ order.createdDate  }}</td>
@@ -30,25 +30,27 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from "axios";
-import TokenStore from "@/utils/TokenStore";// 引用 TokenStore
 
-// 預設用戶 ID Brian（測試用，要記得改掉）
-const userId = 2;
+const userId = localStorage.getItem('userId');
+console.log(userId);
 
 // 儲存訂單資料
 const orders = ref([]);
+
+const params = {userId: userId};
 
 // 請求後端API
 const fetchOrders = async () => {
   try {
     // 取得存儲在 localStorage 中的 token
-    const token = TokenStore.getToken();
+    const token = localStorage.getItem('token');
 
     // 設定 Axios 請求的 headers
     if (token) {
       const response = await axios.get(
-        `http://localhost:8080/orders/getAllOrders`, // 修改為你的 API 路徑
+        `http://localhost:8080/orders/getAllOrders`,
         {
+          params:params,
           headers: {
             Authorization: `Bearer ${token}`,  // 加入 JWT token
           }

@@ -1,7 +1,7 @@
 <!-- 到頂端按鈕 -->
 
 <template>
-  <div class="scroll-top" @click="scrollTop">
+  <div class="topbtn" @click="scrollTop">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="16"
@@ -32,22 +32,29 @@ export default {
 </script>
 
 <style>
-.scroll-top {
+.topbtn {
   position: fixed;
-  right: 2em;
-  bottom: 2em;
+  right: 3em;
+  bottom: 3em;
+  border-radius: 50%; 
   cursor: pointer;
-  z-index: 9999; /* 確保它在頁面頂層 */
+  display: flex; /* 讓內容居中 */
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 6px rgba(100, 100, 100, 0.5);
+  
 }
 
 .topsvg {
-  width: 2em; /* 控制圖標大小 */
-  height: 2em; /* 控制圖標大小 */
-  fill: rgb(100, 170, 0, 0.7); /*綠色*/
+  width:  3em; /* 設置大小 */
+  height:  3em; /* 設置大小 */
+  fill: orange;
+  z-index: 900;
+ 
 }
 
 .topsvg :hover {
-  fill: rgb(100, 170, 0, 0.5);
+  fill: rgb(255, 165, 0, 0.7);
 }
 
 .scroll-top svg {
