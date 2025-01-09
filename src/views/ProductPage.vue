@@ -50,27 +50,25 @@
     <!-- 商品列表 -->
     <div class="product-container">
       <div class="product-grid">
-        <div
-          v-for="product in products"
-          :key="product.id"
-          :to="`/products/${product.productId}`"
-          class="product-card"
-        >
-          <img :src="product.imageUrl" alt="商品圖片" class="product-image" />
-          <div class="product-details">
-            <h3 class="product-title">{{ product.productName }}</h3>
-            <!-- <p class="product-category">{{ product.productId }}</p> -->
-            <p class="product-category">{{ product.category }}</p>
-            <p class="product-price">NT$ {{ product.price }}</p>
-            <p class="product-description">{{ product.description }}</p>
-          </div>
-          <button class="add-to-cart" @click="addToCart(product)">
+        <div v-for="product in products" :key="product.id" class="product-card">
+          <router-link
+            :to="`/products/${product.productId}`"
+            class="product-link"
+          >
+            <img :src="product.imageUrl" alt="商品圖片" class="product-image" />
+            <div class="product-details">
+              <h3 class="product-title">{{ product.productName }}</h3>
+              <p class="product-category">{{ product.category }}</p>
+              <p class="product-price">NT$ {{ product.price }}</p>
+              <p class="product-description">{{ product.description }}</p>
+            </div>
+          </router-link>
+          <button class="add-to-cart" @click.stop="addToCart(product)">
             加入購物車
           </button>
         </div>
       </div>
     </div>
-
     <!-- 分頁功能 -->
     <div class="pagination" v-if="totalPages > 1">
       <button @click="changePage(page - 1)" :disabled="page === 1">
@@ -219,6 +217,10 @@ onMounted(() => {
   width: 100%;
   justify-items: center; /* 水平置中 */
 }
+/* 被router包起來的地方 */
+.product-link {
+  text-decoration: none; /* 移除底線 */
+}
 
 /* 商品卡片 */
 .product-card {
@@ -281,8 +283,10 @@ onMounted(() => {
 /* 商品描述 */
 .product-description {
   font-size: 16px;
+  margin: 0 15px;
   color: #888;
   margin-bottom: 10px;
+  text-align: left;
 }
 
 /* 加入購物車按鈕 */

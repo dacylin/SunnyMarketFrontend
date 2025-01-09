@@ -1,6 +1,6 @@
 <template>
   <Header />
-  <TopButton />
+  
   <div class="container">
     <div class="imgdiv">
       <img :src="product.imageUrl" alt="Product Image 預定顯示圖片" />
@@ -19,10 +19,10 @@
       <h3>NT$ {{ product.price }}</h3>
       <button @click="addToCart(product)">加入購物車</button>
 
-
-
     </div>
   </div>
+  <TopButton />
+  <CartBtn />
   <Footer />
 </template>
 
@@ -30,7 +30,7 @@
 import Header from "@/components/Header.vue"; // 引入 Header 元件
 import Footer from "@/components/Footer.vue"; // 引入 Footer 元件
 import TopButton from "@/components/TopButton.vue"; // 引入 TopButton 元件
-import QuantityControl from "@/components/QuantityControl.vue"; // 引入 +-數量按鈕組件
+import CartBtn from "@/components/CartBtn.vue"; 
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useCartStore } from "@/stores/cartStore"; // 引入Store 
