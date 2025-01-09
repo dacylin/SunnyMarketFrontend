@@ -29,7 +29,7 @@
             required
           />
         </div>
-        <div class="forgotpassword">忘記密碼?</div>
+        <div class="forgotpassword">忘記密碼？</div>
         <div class="form-actions">
           <button type="submit">登入</button>
         </div>
@@ -43,7 +43,7 @@
     <div class="register-box">
       <div class="register-label">新會員</div>
       <router-link to="/user/register" class="registerurl"
-        ><div class="register-button">會員註冊</div></router-link
+        ><div class="register-button">點此註冊</div></router-link
       >
     </div>
   </div>
@@ -154,7 +154,7 @@ onMounted(() => {
 
 .background {
   background-color: rgb(230, 230, 230);
-  height: 80vh;
+  min-height: 500px;
   display: flex;
   justify-content: center;
   gap: 100px;
@@ -224,8 +224,18 @@ onMounted(() => {
   justify-content: center;
 }
 
+.register-button:hover {
+  background-color: gray;
+}
+
+
 .form-actions button[type="submit"] {
   background-color: black;
+  color: white;
+}
+
+.form-actions button[type="submit"]:hover {
+  background-color: grey;
   color: white;
 }
 

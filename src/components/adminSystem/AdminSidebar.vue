@@ -13,7 +13,7 @@
             <ul class="navlist">
                 <li :class="{ active: activeIndex === 0 }" @click="setActive(0, usertablelist)">使用者管理列表</li>
                 <li :class="{ active: activeIndex === 1 }" @click="setActive(1, producttablelist)">商品管理列表</li>
-                <li :class="{ active: activeIndex === 2 }" @click="setActive(2, ordertablelist)">會員訂單總表(已接到後端)</li>
+                <li :class="{ active: activeIndex === 2 }" @click="setActive(2, ordertablelist)">會員訂單總表</li>
                 <li class="logoutButton" @click="logout">登出</li>
             </ul>
         </div>

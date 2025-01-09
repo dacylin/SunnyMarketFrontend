@@ -1,164 +1,197 @@
 <template>
-  <div class="user-profile">
-    <h1>用戶個人資料</h1>
-    <table class="profile-table">
-      <thead>
-        <tr>
-          <th>用戶名稱</th>
-          <th>地址</th>
-          <th>聯絡電話</th>
-          <th>生日</th>
-         
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>{{ user.username }}</td>
-          <td>{{ user.address }}</td>
-          <td>{{ user.phoneNumber }}</td>
-          <td>{{ user.birthday }}</td>
-          
-        </tr>
-      </tbody>
-    </table>
+  <el-card class="user-profile-card" shadow="hover">
+    <h2 class="title">使用者資料</h2>
+    <template v-if="!editMode">
+      <div class="table-container">
+        <el-table :data="userData" border>
+          <el-table-column
+            prop="label"
+            label="項目"
+            width="120"
+          ></el-table-column>
+          <el-table-column prop="value" label="資料"></el-table-column>
+        </el-table>
+      </div>
 
-    <button @click="isEditing = !isEditing">{{ isEditing ? '取消編輯' : '編輯資料' }}</button>
+      <div class="actions">
+        <el-button type="primary" @click="enterEditMode">更新</el-button>
+      </div>
+    </template>
 
-    <!-- 編輯用戶資料 -->
-    <div v-if="isEditing" class="edit-form">
-      <table class="profile-table">
-        <thead>
-          <tr>
-            <th>用戶名稱</th>
-            <th>地址</th>
-            <th>聯絡電話</th>
-            <th>生日</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><input v-model="editUser.username" placeholder="用戶名稱" /></td>
-            <td><input v-model="editUser.phoneNumber" placeholder="電話號碼" /></td>
-            <td><input v-model="editUser.address" placeholder="地址" /></td>
-            <td><input type="date" v-model="editUser.birthday" /></td>
-          </tr>
-        </tbody>
-      </table>
-      <button @click="saveUserProfile">保存資料</button>
-    </div>
-  </div>
+    <template v-else>
+      <el-form
+        :model="formData"
+        :rules="rules"
+        ref="userForm"
+        label-width="100px"
+      >
+        <el-form-item label="使用者名稱" prop="username">
+          <el-input v-model="formData.username"></el-input>
+        </el-form-item>
+
+        <el-form-item label="地址" prop="address">
+          <el-input v-model="formData.address"></el-input>
+        </el-form-item>
+
+        <el-form-item label="電話號碼" prop="phoneNumber">
+          <el-input v-model="formData.phoneNumber"></el-input>
+        </el-form-item>
+
+        <el-form-item label="生日" prop="birthday">
+          <el-date-picker
+            v-model="formData.birthday"
+            type="date"
+            placeholder="選擇日期"
+          ></el-date-picker>
+        </el-form-item>
+
+        <div class="actions">
+          <el-button type="primary" @click="submitUpdate">提交</el-button>
+          <el-button @click="cancelEditMode">取消</el-button>
+        </div>
+
+      </el-form>
+    </template>
+  </el-card>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import axios from 'axios';
-import TokenStore from "@/utils/TokenStore";
+import { reactive, ref, onMounted } from "vue";
+import { ElMessage } from "element-plus";
+import axios from "@/utils/Request"; // 使用封裝的 Axios 工具
 
-const user = ref({
-  username: '',
-  email: '',
-  phoneNumber: '',
-  birthday: '',
-  address: ''
+// 靜態資料結構，表示使用者的四個資料項目
+const userData = reactive([
+  { label: "使用者名稱", value: "" },
+  { label: "地址", value: "" },
+  { label: "電話號碼", value: "" },
+  { label: "生日", value: "" },
+]);
+
+const formData = reactive({
+  username: "",
+  address: "",
+  phoneNumber: "",
+  birthday: "",
 });
 
-const editUser = ref({ ...user.value }); // 用於編輯模式的資料
-const isEditing = ref(false); // 控制是否進入編輯模式
-const userId = localStorage.getItem("userId"); // 使用者 ID
+// 是否進入編輯模式
+const editMode = ref(false);
 
-onMounted(async () => {
-  const token = TokenStore.getToken();
+// 表單驗證規則
+const rules = {
+  username: [{ required: true, message: "請輸入使用者名稱", trigger: "blur" }],
+  address: [{ required: true, message: "請輸入地址", trigger: "blur" }],
+  phoneNumber: [
+    { required: true, message: "請輸入電話號碼", trigger: "blur" },
+    {
+      pattern: /^[0-9]{8,15}$/,
+      message: "電話號碼格式不正確",
+      trigger: "blur",
+    },
+  ],
+  birthday: [{ required: true, message: "請選擇生日", trigger: "change" }],
+};
 
-  if (!token) {
-    console.error("No token found. Unable to fetch user profile.");
-    return;
-  }
+// 進入編輯模式的方法
+const enterEditMode = () => {
+  editMode.value = true;
+  // 將靜態資料填充到表單中
+  formData.username = userData[0].value;
+  formData.address = userData[1].value;
+  formData.phoneNumber = userData[2].value;
+  formData.birthday = userData[3].value;
+};
 
+// 提交更新的方法
+const submitUpdate = async () => {
   try {
-    // 獲取用戶資料
-    const response = await axios.get(`http://localhost:8080/api/user/${userId}`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    user.value = response.data;
-    editUser.value = { ...user.value }; // 初始化編輯資料
+    const userId = localStorage.getItem("userId");
+    await axios.put(`/api/user/updateUser/${userId}`, formData);
+    ElMessage.success("資料更新成功");
+    editMode.value = false;
+    await fetchUserData(); // 更新後重新載入資料
   } catch (error) {
-    console.error('Failed to fetch user profile:', error);
-  }
-});
-
-// 保存用戶資料
-const saveUserProfile = async () => {
-  const token = TokenStore.getToken();
-
-  if (!token) {
-    console.error("No token found. Unable to save user profile.");
-    return;
-  }
-
-  try {
-    await axios.post(`http://localhost:8080/api/user/updateUesr/${userId}`, editUser.value, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    user.value = { ...editUser.value }; // 更新用戶資料
-    isEditing.value = false; // 退出編輯模式
-  } catch (error) {
-    console.error('Failed to update user profile:', error);
+    console.error("更新失敗:", error);
+    ElMessage.error("更新失敗，請稍後再試");
   }
 };
+
+// 取消編輯模式
+const cancelEditMode = () => {
+  editMode.value = false;
+};
+
+// 載入使用者資料的方法
+const fetchUserData = async () => {
+  try {
+    const userId = localStorage.getItem("userId"); // 從 localStorage 獲取 userId
+    const response = await axios.get(`/api/user/profile/${userId}`); // 調用後端 API
+    const { username, address, phoneNumber, birthday } = response.data;
+
+    // 更新表格資料
+    userData[0].value = username || "未提供";
+    userData[1].value = address || "未提供";
+    userData[2].value = phoneNumber || "未提供";
+    userData[3].value = birthday || "未提供";
+  } catch (error) {
+    console.error("載入資料失敗:", error);
+    ElMessage.error("無法獲取使用者資料");
+  }
+};
+
+// 在組件掛載時載入資料
+onMounted(() => {
+  fetchUserData();
+});
 </script>
 
 <style scoped>
-.user-profile {
-  margin: 20px auto;
-  max-width: 800px;
-  text-align: center;
+.user-profile-container {
+    display: flex;
+    justify-content: flex-start; /* 與左側導航欄對齊 */
+    padding: 20px; /* 外部間距 */
 }
 
-.profile-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
+.user-profile-card {
+    width: 100%; /* 固定寬度 */
+    max-width: 80%; /* 最大寬度限制 */
+    padding: 20px; /* 內邊距 */
+    border: 1px solid #dcdcdc; /* 邊框樣式 */
+    border-radius: 8px; /* 圓角效果 */
+    box-shadow: none; /* 去掉多餘陰影 */
+    overflow: hidden; /* 防止內容溢出 */
+    max-height: 400px; /* 限制最大高度 */
 }
 
-thead {
-  background-color: #f4f4f4;
+.table-container {
+    width: 100%;
+    margin-top: 10px; /* 表格上移 */
 }
 
-th, td {
-  border: 1px solid #ddd;
-  padding: 10px;
-  text-align: center;
+.custom-table {
+    width: 100%; /* 表格寬度佔滿卡片 */
+    text-align: center; /* 表格文字居中 */
 }
 
-th {
-  font-weight: bold;
+.title {
+    font-size: 24px; /* 標題字體大小 */
+    font-weight: bold; /* 標題加粗 */
+    margin-bottom: 10px; /* 與表格間距 */
+    text-align: center; /* 標題靠左對齊 */
 }
 
-.edit-form {
-  margin-top: 20px;
+.actions {
+    margin-top: 20px;
+    text-align: center; /* 按鈕居中 */
 }
 
-button {
-  padding: 5px 10px;
-  border: 1px solid #ccc;
-  background-color: #f9f9f9;
-  cursor: pointer;
-  transition: background-color 0.3s;
+.el-form-item {
+  margin-bottom: 15px;
 }
 
-button:hover:not([disabled]) {
-  background-color: #ddd;
+.el-card:hover {
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1) !important; /* 調整陰影大小和透明度 */
 }
 
-button:disabled {
-  background-color: #f4f4f4;
-  cursor: not-allowed;
-}
 </style>
-
-
-
-
-
-
-

@@ -11,21 +11,29 @@
         }}</router-link>
       </li>
     </ul>
-    <!-- 切換「登入」和「登出、會員中心」按鈕 -->
-    <div v-if="!isLoggedIn">
+    <!-- USER_ADMIN：切換「登入」和「登出、後台管理」按鈕 
+         ROLE_ADMIN：切換「登入」和「登出、會員中心」按鈕 
+    -->
+    <div class="btncontain" v-if="!isLoggedIn">
       <router-link to="/user/login">
-        <button class = "btn">登入</button>
+        <button class="btn">登入 | 註冊</button>
       </router-link>
     </div>
-    <div v-else>
-      <button class = "btn" @click.native="logout">
+    <div class="btncontain" v-else-if="isUser">
+      <button class="btn" @click="logout">
         <p>登出</p>
       </button>
       <router-link to="/usercenter">
-        <button class = "btn">會員中心</button>
+        <button class="btn">會員中心</button>
       </router-link>
     </div>
-    <div class="features">
+    <div class="btncontain" v-else-if="isAdmin">
+      <button class="btn" @click="logout">
+        <p>登出</p>
+      </button>
+      <router-link to="/adminbackend">
+        <button class="btn">後台管理</button>
+      </router-link>
     </div>
   </header>
 </template>
@@ -35,9 +43,6 @@ import navData from "@/nav/nav.js"; //默認導入 navData
 import { ref, computed } from "vue";
 import TokenStore from "@/utils/TokenStore";
 import { useRouter } from "vue-router";
-//抓購物車數量
-import { useCartStore } from '@/stores/cartStore'; //載入pinia
-import { storeToRefs } from 'pinia' // 可以使用方法
 
 const navs = ref(navData);
 const router = useRouter();
@@ -62,17 +67,27 @@ const isLoggedIn = computed(() => {
   return token && isTokenValid(token);
 });
 
+// 從 localStorage 獲取角色
+const role = computed(() => localStorage.getItem("role"));
+
+// 判斷是否為普通用戶
+const isUser = computed(() => role.value === "ROLE_USER");
+
+// 判斷是否為管理員
+const isAdmin = computed(() => role.value === "ROLE_ADMIN");
+
 // 登出功能：移除 token 並更新狀態
 const logout = async () => {
-  // 移除 Token
+  console.log("角色準備登出", role.value);
+  // 移除 Token 跟 role
   TokenStore.removeToken();
+  localStorage.removeItem("role");
 
   // 確認 Token 是否為 null
   const token = TokenStore.getToken();
   if (token === null) {
     console.log("Token 已被移除");
   }
-
   console.log("登出後的 Token 值:", token);
 
   // 顯示提示訊息
@@ -82,16 +97,7 @@ const logout = async () => {
   await router.push("/"); // 確保導航完成
   window.location.reload(); // 強制刷新頁面
 };
-
-//顯示購物車商品總數量
-  // 初始化 Pinia 的 store
-  const cartStore = useCartStore();
-
-  // 使用 storeToRefs 解構 state 和 getters
-  const {items, totalPrice, totalQuantity} = storeToRefs(cartStore)
-
 </script>
-
 
 <style scoped>
 header {
@@ -106,6 +112,30 @@ header {
   background-color: white;
   box-shadow: 0 2px 5px rgba(150, 150, 150, 0.3);
   border-bottom: 2px solid rgba(150, 150, 150, 0.3);
+}
+
+/* 登入、登出、會員中心按鈕 */
+.btncontain {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn {
+  padding: 10px;
+  border: none;
+  background: white;
+  border: 2px solid lightgray;
+  color: darkgray;
+  border-radius: 5px;
+  font-size: 1em;
+  margin: 0 10px;
+  font-weight: bold;
+}
+
+.btn:hover {
+  background: lightgoldenrodyellow;
 }
 
 .logo {
@@ -134,7 +164,7 @@ header {
 }
 
 .navitem {
-  color: grey;
+  color: darkgray;
   text-decoration: none;
   font-weight: bold;
   letter-spacing: 5px;
@@ -173,13 +203,5 @@ li:hover::after {
 .logout-btn p,
 .user-center-btn p {
   margin: 0; /* 移除文字的預設間距 */
-}
-
-.features {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
 }
 </style>
