@@ -1,4 +1,4 @@
-<!-- todo: 先只要顯示 -->
+<!-- loginhistory.vue -->
 <template>
   <div class="login-history">
     <h2>登入歷史查詢</h2>
@@ -7,9 +7,9 @@
         <tr>
           <th>Record Id</th>
           <th>Login Time</th>
-          <th>IP Address</th>
-          <th>OS Name</th>
-          <th>Browser</th>
+          <th>IP 地址</th>
+          <th>OS 名稱</th>
+          <th>瀏覽器</th>
         </tr>
       </thead>
       <tbody>
@@ -94,20 +94,22 @@ const prevPage = () => {
 h2 {
   font-size: 1.5em;
   margin-bottom: 10px;
+  
 }
 
 table {
-  width: 100%;
+  width:  700px;
   border-collapse: collapse;
   margin-top: 10px;
 }
 
 thead {
-  background-color: #f4f4f4;
+  background: rgb(255, 255, 100, 0.7);
+ 
 }
 
 th, td {
-  border: 1px solid #ddd;
+  border: 2px solid lightgray;
   padding: 10px;
   text-align: center;
 }
@@ -129,7 +131,7 @@ button {
   border: 1px solid #ccc;
   background-color: #f9f9f9;
   cursor: pointer;
-  transition: background-color 0.3s;
+  border-radius: 5px;
 }
 
 button:hover:not([disabled]) {

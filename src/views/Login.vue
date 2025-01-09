@@ -73,16 +73,16 @@ const router = useRouter();
 const getLogin = async () => {
   const response = await api.post("/api/user/login", loginFrom.value);
   if (response.data) {
-    console.log("這是 response.data:", response.data);
+    console.log("這是 response.data：", response.data);
     // 提取訊息和 Token
     message.value = response.data.message;
     localStorage.setItem("role" , response.data.role);
     tokenStore.token = response.data.token;
-    console.log("獲取的 token:", tokenStore.token);
+    console.log("獲取的 token：", tokenStore.token);
 
     //設置 token 在 TokenStore
     TokenStore.setToken(response.data.token);
-    console.log("TokenStore 獲取的 token:", TokenStore.getToken());
+    console.log("TokenStore 獲取的 token：", TokenStore.getToken());
 
     // 延遲 3 秒後跳轉首頁
     setTimeout(() => {
@@ -97,11 +97,11 @@ const googleLogin = async () => {
     if (response) {
       window.location.href = response.data.authUrl;
     } else {
-      message.value = "Google 登入失敗，請再試一次。";
+      message.value = "Google 登入失敗，請再試一次";
     }
   } catch (error) {
-    console.error("Google 登入失敗:", error);
-    message.value = "Google 登入失敗，請稍後再試。";
+    console.error("Google 登入失敗：", error);
+    message.value = "Google 登入失敗，請稍後再試";
   }
 };
 
@@ -118,17 +118,17 @@ const handleGoogleRedirect = async () => {
         "/google/getGoogleCode",
         googleLoginRequest
       );
-      console.log("Google 用戶資訊:", response.data);
+      console.log("Google 用戶資訊：", response.data);
       TokenStore.setToken(response.data.token);
       setTimeout(() => {
       router.push("/");
     }, 3000);
     } catch (error) {
-      console.error("發送 code 到後端失敗:", error);
-      message.value = "處理登入資訊失敗，請稍後再試。";
+      console.error("發送 code 到後端失敗：", error);
+      message.value = "處理登入資訊失敗，請稍後再試";
     }
   } else {
-    message.value = "請使用者登入。";
+    message.value = "請使用者登入";
   }
 };
 
