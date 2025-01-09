@@ -29,7 +29,7 @@
             required
           />
         </div>
-        <div class="forgotpassword">忘記密碼?</div>
+        <div class="forgotpassword">忘記密碼？</div>
         <div class="form-actions">
           <button type="submit">登入</button>
         </div>
