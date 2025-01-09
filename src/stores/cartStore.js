@@ -40,10 +40,11 @@ export const useCartStore = defineStore("cartStore", {
       const item = this.items.find((item) => item.productId === productId); // 查找購物車中的商品
       if (item && newQuantity > 0) {
         item.quantity = newQuantity; // 更新商品數量，如果數量小於 1，則設為 1
+
       }
     },
     setDefaultQuantity(item) {
-      if (!item.quantity || item.quantity === null || item.quantity === undefined) {
+      if (!item.quantity || item.quantity === null || item.quantity === undefined || item.quantity <= 0) {
         item.quantity = 1; // 重設為 1
         console.warn(`數量為空，已重設為 1 (商品 ID: ${item.productId})`);
       }
