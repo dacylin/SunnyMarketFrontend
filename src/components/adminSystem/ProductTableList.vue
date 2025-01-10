@@ -15,7 +15,7 @@
             <th class="category">分類</th>
             <th class="price">價格</th>
             <th class="stock">庫存</th>
-            <th class="function">新增日期</th>
+            <th class="function">功能</th>
           </tr>
         </thead>
         <tbody>
@@ -170,6 +170,7 @@ const handleSearch = () => {
 <style scoped>
 .container {
   margin: 20px auto;
+  height: 100vh;
 }
 
 .titlecontainer {
