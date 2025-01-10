@@ -32,7 +32,6 @@ import { ref, onMounted } from 'vue';
 import axios from "axios";
 
 const userId = localStorage.getItem('userId');
-console.log(userId);
 
 // 儲存訂單資料
 const orders = ref([]);
