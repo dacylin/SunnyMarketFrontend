@@ -1,7 +1,6 @@
 <template>
   <Header />
   <div class="chatroom-container">
-    <h1 class="chat-title">聊天室</h1>
     <div v-if="isLoggedIn" class="chat-wrapper">
       <div class="chat-box">
         <div
@@ -59,6 +58,8 @@ const sendMessage = async () => {
     const response = await axios.post(`/api/openAi/${userId}/chet`, {
       userAsk: currentUserAsk,
     });
+    console.log(currentUserAsk);
+    console.log(response);
 
     // 顯示伺服器回應的訊息
     messages.value.push({ text: response.data.aiRespond, isUser: false });
@@ -106,7 +107,7 @@ const sendMessage = async () => {
   margin-bottom: 10px;
   padding: 10px 15px;
   border-radius: 20px;
-  max-width: 70%;
+  max-width: 50%;
   word-wrap: break-word;
 }
 
