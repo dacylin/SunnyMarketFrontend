@@ -3,18 +3,24 @@
     <div class="modalContent">
       <div class="title">編輯商品</div>
       <form @submit.prevent="handleSave" class="form">
-        <label>商品名稱</label>
+        <label>商品名稱：</label>
         <input v-model="form.productName" required />
 
-        <label>分類</label>
+        <label>分類：</label>
         <select v-model="form.category" required>
           <option v-for="category in categories" :key="category" :value="category">{{ category }}</option>
         </select>
 
-        <label>價格</label>
+        <label>描述：</label>
+        <input v-model="form.description" required />
+
+        <label>圖片</label>
+        <input v-model="form.imageUrl" required />
+
+        <label>價格：</label>
         <input v-model.number="form.price" type="number" required />
 
-        <label>庫存</label>
+        <label>庫存：</label>
         <input v-model.number="form.stock" type="number" required />
 
         <div class="actions">
@@ -59,6 +65,8 @@ const handleSave = async () => {
       {
         productName: form.value.productName,
         category: form.value.category,
+        description: form.value.description,
+        imageUrl: form.value.imageUrl,
         price: form.value.price,
         stock: form.value.stock,
       }
