@@ -18,7 +18,8 @@ import ProductTableList from "@/components/adminSystem/ProductTableList.vue";
 import OrdertableList from "@/components/adminSystem/OrdertableList.vue";
 // 導入 購物車組件 (記得修改)
 import Cart from "@/views/Cart/Cart.vue";
-
+// 導入 TokenStore，限制User和Admin的可見路由
+import TokenStore from "@/utils/TokenStore";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL), // 定義路由歷史模式
@@ -63,8 +64,7 @@ const router = createRouter({
       component: Cart,
     },
 
-
-    // 添加會員中心路由
+    // 會員中心路由
     {
       path: "/usercenter",
       name: "UserCenter",
@@ -86,6 +86,7 @@ const router = createRouter({
           component: UserProfile,
         },
       ],
+      meta: { requiresAuth: true, role: "ROLE_USER" },
     },
     // 添加管理員後台路由
     {
@@ -109,8 +110,47 @@ const router = createRouter({
           component: OrdertableList,
         },
       ],
+      meta: { requiresAuth: true, role: "ROLE_ADMIN" },
     },
   ],
+});
+
+// 全局路由守衛
+router.beforeEach((to, from, next) => {
+  const token = TokenStore.getToken();
+  const role = localStorage.getItem("role");
+  console.log("Index.js 現在的role是", role);
+  console.log("Index.js 現在的token是", token);
+
+  // 判斷 token 是否有效
+  const isTokenValid = (token) => {
+    try {
+      const payload = TokenStore.decodeToken(token); // 使用 TokenStore 內的解碼函數
+      if (payload && payload.exp * 1000 > Date.now()) {
+        return true; // Token 有效且未過期
+      }
+    } catch (error) {
+      console.error("Token 無效:", error);
+    }
+    return false;
+  };
+
+  // 檢查路由是否需要驗證
+  if (to.meta.requiresAuth) {
+    // 驗證是否登入
+    if (!token || !isTokenValid(token)) {
+      alert("您尚未登入，請先登入！");
+      return next({ name: "Login" }); // 導向登入頁
+    }
+
+    // 驗證角色權限
+    if (to.meta.role && to.meta.role !== role) {
+      alert("您無權訪問此頁面！");
+      return next({ name: "Home" }); // 導向首頁
+    }
+  }
+
+  next(); // 繼續導航
 });
 
 export default router;

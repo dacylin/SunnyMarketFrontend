@@ -4,6 +4,9 @@
     <table v-if="items.length > 0" border="1">
       <thead>
         <tr>
+          <th>全選 <input type="checkbox"
+            :checked="allSelected"
+            @change="toggleAllSelection" /></th>
           <th>圖片</th>
           <th>品名</th>
           <th>價格</th>
@@ -14,6 +17,9 @@
       </thead>
       <tbody>
         <tr v-for="item in items" :key="item.id">
+          <td><input type="checkbox" 
+            :checked="item.selected"
+            @change="toggleItemSelection(item.productId)"/></td>
           <td>
             <img
               :src="item.imageUrl"
@@ -76,9 +82,10 @@ import axios from "axios";
 // 初始化 Pinia 的 store
 const cartStore = useCartStore();
 // 使用 storeToRefs 解構 state 和 getters
-const { items, totalPrice, totalQuantity } = storeToRefs(cartStore);
+const { items, totalPrice, totalQuantity, allSelected  } = storeToRefs(cartStore);
 // 直接從 store 中使用 actions
-const { removeItem, clearCart, updateQuantity, setDefaultQuantity } = cartStore;
+const { removeItem, clearCart, updateQuantity, setDefaultQuantity, toggleAllSelection,
+  toggleItemSelection,} = cartStore;
 
 console.log("items 值的實際資料:", items);
 // 結帳
