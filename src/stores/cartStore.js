@@ -44,7 +44,8 @@ export const useCartStore = defineStore("cartStore", {
       }
     },
     setDefaultQuantity(item) {
-      if (!item.quantity || item.quantity === null || item.quantity === undefined || item.quantity <= 0) {
+      if (!item.quantity || item.quantity === null || item.quantity === undefined || item.quantity <= 0 || item.quantity.replace ||!Number.isInteger(Number(item.quantity))) {
+
         item.quantity = 1; // 重設為 1
         console.warn(`數量為空，已重設為 1 (商品 ID: ${item.productId})`);
       }
