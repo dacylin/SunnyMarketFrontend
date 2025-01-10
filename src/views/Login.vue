@@ -120,6 +120,7 @@ const handleGoogleRedirect = async () => {
       );
       console.log("Google 用戶資訊：", response.data);
       TokenStore.setToken(response.data.token);
+      localStorage.setItem("role", response.data.role)
       setTimeout(() => {
       router.push("/");
     }, 3000);

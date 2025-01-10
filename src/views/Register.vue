@@ -120,7 +120,9 @@ const validateAndRegister = () => {
 
 const registerAdd = async () => {
   try {
+    console.log(registerForm.value);
     const { data } = await api.post("/api/user/register", registerForm.value);
+    console.log(registerForm.value);
     if (data) {
       alert("註冊成功");
       setTimeout(() => router.push("/user/Login"), 3000);
