@@ -15,7 +15,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="order in orders" :key="order.order_id">
+            <tr v-for="order in orders" :key="order.orderId">
               <td>{{ order.userId  }}</td>
               <td>{{ order.orderId  }}</td>
               <td>{{ order.createdDate  }}</td>
@@ -26,7 +26,7 @@
       </div>
     </div>
   </template>
-  
+
   <script setup>
   import { ref, onMounted } from 'vue';
   import axios from "axios";
@@ -47,14 +47,13 @@
       // 設定 Axios 請求的 headers
       if (token) {
         const response = await axios.get(
-          `http://localhost:8080/orders/${userId}/getAllOrders`, // 修改為你的 API 路徑
+          `http://localhost:8080/orders/getAllOrders`, // 修改為你的 API 路徑
           {
             headers: {
               Authorization: `Bearer ${token}`,  // 加入 JWT token
             }
           }
         );
-  
         console.log("response.data回傳為", JSON.stringify(response.data, null, 2));
         orders.value = response.data.list; // 設置訂單列表
       } else {
@@ -69,6 +68,8 @@
     fetchOrders();
   });
   
+
+
   </script>
   
   <style scoped>
