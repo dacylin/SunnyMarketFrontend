@@ -2,7 +2,7 @@
 <template>
     <div class="sidebar">
         <div class="header_container">
-            <router-link to="/" >
+            <router-link to="/">
                 <img class="logo" src="@/assets/sunnymarket_nobg.png" alt="Logo" />
             </router-link>
             <div class="headertext">
@@ -13,7 +13,7 @@
             <ul class="navlist">
                 <li :class="{ active: activeIndex === 0 }" @click="setActive(0, usertablelist)">使用者管理列表</li>
                 <li :class="{ active: activeIndex === 1 }" @click="setActive(1, producttablelist)">商品管理列表</li>
-                <li :class="{ active: activeIndex === 2 }" @click="setActive(2, ordertablelist)">會員訂單總表</li>
+                <li :class="{ active: activeIndex === 2 }" @click="setActive(2, ordertablelist)">會員訂單總表(已接到後端)</li>
                 <li class="logoutButton" @click="logout">登出</li>
             </ul>
         </div>
@@ -22,8 +22,7 @@
 
 <!-- js設定 -->
 <script setup>
-import { ref, onMounted, computed } from 'vue';
-import TokenStore from "@/utils/TokenStore";
+import { ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 const activeIndex = ref(null);
@@ -41,7 +40,7 @@ const setInitialActiveIndex = () => {
         activeIndex.value = 0;
     } else if (path.includes('/adminbackend/producttablelist')) {
         activeIndex.value = 1;
-    }else if (path.includes('/adminbackend/ordertablelist')) {
+    } else if (path.includes('/adminbackend/ordertablelist')) {
         activeIndex.value = 2;
     }
 };
@@ -56,40 +55,14 @@ const setActive = (index, routePath) => {
 onMounted(() => {
     setInitialActiveIndex();
 });
-
-// 從 localStorage 獲取角色
-const role = computed(() => localStorage.getItem("role"));
-
-// 登出功能：移除 token 並更新狀態
-const logout = async () => {
-  console.log("角色準備登出", role.value);
-  // 移除 Token 跟 role
-  TokenStore.removeToken();
-  localStorage.removeItem("role");
-
-  // 確認 Token 是否為 null
-  const token = TokenStore.getToken();
-  if (token === null) {
-    console.log("Token 已被移除");
-  }
-  console.log("登出後的 Token 值:", token);
-
-  // 顯示提示訊息
-  alert("您已成功登出！");
-
-  // 使用 router 導航並強制刷新
-  await router.push("/"); // 確保導航完成
-
-};
-
 </script>
 
 <!-- css設定 -->
 <style scoped>
 .sidebar {
     width: 240px;
-    height: 100vh;
-    background:rgba(100, 100, 100, 0.1); 
+    height: auto;
+    background: rgba(100, 100, 100, 0.1);
     padding-top: 20px;
     margin-right: 20px;
     position: relative;
@@ -112,13 +85,12 @@ const logout = async () => {
     display: flex;
     gap: 20px;
     justify-content: center;
-    color:gray;
+    color: gray;
 }
 
 .headertext2 {
     font-size: 20px;
-    font-weight: bold;
-    
+
 }
 
 .navlist {
@@ -138,8 +110,8 @@ const logout = async () => {
 }
 
 .navlist li:hover {
-    color: orange;
-    
+    color: orangered;
+
 }
 
 .navlist li.active {

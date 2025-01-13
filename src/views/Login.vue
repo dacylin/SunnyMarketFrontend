@@ -84,10 +84,10 @@ const getLogin = async () => {
     TokenStore.setToken(response.data.token);
     console.log("TokenStore 獲取的 token：", TokenStore.getToken());
 
-    // 延遲 3 秒後跳轉首頁
+    // 延遲 0.5 秒後跳轉首頁
     setTimeout(() => {
       router.push("/");
-    }, 3000);
+    }, 500);
   }
 };
 
@@ -123,7 +123,7 @@ const handleGoogleRedirect = async () => {
       localStorage.setItem("role", response.data.role)
       setTimeout(() => {
       router.push("/");
-    }, 3000);
+    }, 500);
     } catch (error) {
       console.error("發送 code 到後端失敗：", error);
       message.value = "處理登入資訊失敗，請稍後再試";
