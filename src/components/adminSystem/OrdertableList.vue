@@ -6,7 +6,7 @@
     <div class="tableContainer">
       <div class="title">會員訂單總表</div>
       <div class="search">
-        <input class="searchInput" type="text" v-model="search" placeholder="搜尋使用者名稱" @input="handleSearch" />
+        <input class="searchInput" type="text" v-model="search" placeholder="搜尋訂單編號" @input="handleSearch" />
       </div>
       <table class="table">
         <thead>
