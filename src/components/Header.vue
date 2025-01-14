@@ -20,6 +20,7 @@
       </router-link>
     </div>
     <div class="btncontain" v-else-if="isUser">
+      <p class="welcome">歡迎 {{ email }}</p>
       <button class="btn" @click="logout">
         <p>登出</p>
       </button>
@@ -46,6 +47,7 @@ import { useRouter } from "vue-router";
 
 const navs = ref(navData);
 const router = useRouter();
+const email = localStorage.getItem('email');
 
 // 判斷 token 是否有效
 const isTokenValid = (token) => {
@@ -197,11 +199,18 @@ li:hover::after {
 
 /* 設置登入、登出/會員中心 路由樣式 */
 .router-link {
-  text-decoration: none; /* 移除底線 */
+  text-decoration: none;
+  /* 移除底線 */
 }
 
 .logout-btn p,
 .user-center-btn p {
-  margin: 0; /* 移除文字的預設間距 */
+  margin: 0;
+  /* 移除文字的預設間距 */
+}
+
+.welcome {
+  color: darkgray;
+  font-weight: bold;
 }
 </style>
